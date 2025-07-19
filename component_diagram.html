@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Book Loan System - Component Diagram</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .diagram-container {
+            padding: 40px;
+            background: #f8f9fa;
+            position: relative;
+        }
+        
+        .component-layer {
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .layer-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .components-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            position: relative;
+        }
+        
+        .component {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .component:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .component.presentation { border-left: 5px solid #3498db; }
+        .component.application { border-left: 5px solid #e74c3c; }
+        .component.business { border-left: 5px solid #f39c12; }
+        .component.data { border-left: 5px solid #27ae60; }
+        .component.external { border-left: 5px solid #9b59b6; }
+        
+        .component-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .component-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .component-name {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            flex: 1;
+        }
+        
+        .component-type {
+            font-size: 0.8em;
+            background: #ecf0f1;
+            color: #7f8c8d;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        
+        .component-description {
+            color: #6c757d;
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .component-interfaces {
+            margin-top: 15px;
+        }
+        
+        .interfaces-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .interface-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        
+        .interface-tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+        
+        .interface-tag.provides { background: #d4edda; color: #155724; }
+        .interface-tag.requires { background: #f8d7da; color: #721c24; }
+        
+        .dependencies {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .dependencies-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .dependency-list {
+            font-size: 0.85em;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .connection-line {
+            position: absolute;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 2px;
+            border-radius: 1px;
+            z-index: 1;
+            opacity: 0.6;
+        }
+        
+        .connection-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #667eea;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            z-index: 2;
+        }
+        
+        .legend {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .legend h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .tech-details {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .tech-details h3 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .tech-category {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .tech-category h4 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 1.1em;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tech-list li {
+            padding: 5px 0;
+            font-size: 0.9em;
+            color: #495057;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .interface-flows {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .interface-flows h3 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+        
+        .flow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .flow-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .flow-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .flow-description {
+            font-size: 0.9em;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .flow-path {
+            margin-top: 10px;
+            font-size: 0.85em;
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Library Book Loan System</h1>
+            <p class="subtitle">Component Diagram & Internal Architecture</p>
+        </div>
+        
+        <div class="diagram-container">
+            
+            <!-- Presentation Layer Components -->
+            <div class="component-layer">
+                <div class="layer-title">🖥️ Presentation Layer Components</div>
+                <div class="components-grid">
+                    <div class="component presentation">
+                        <div class="component-header">
+                            <div class="component-icon">👨‍💼</div>
+                            <div class="component-name">Staff Web Client</div>
+                            <div class="component-type">React SPA</div>
+                        </div>
+                        <div class="component-description">
+                            Interactive web application for library staff to process loans, manage inventory, and handle member accounts with real-time validation feedback.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Loan Processing UI</span>
+                                <span class="interface-tag provides">Member Management UI</span>
+                                <span class="interface-tag provides">Fine Processing UI</span>
+                            </div>
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Requires:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag requires">API Gateway</span>
+                                <span class="interface-tag requires">Authentication Service</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component presentation">
+                        <div class="component-header">
+                            <div class="component-icon">👤</div>
+                            <div class="component-name">Member Portal</div>
+                            <div class="component-type">React SPA</div>
+                        </div>
+                        <div class="component-description">
+                            Self-service web portal for library members to check account status, view current loans, pay fines, and manage personal information.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Account Dashboard</span>
+                                <span class="interface-tag provides">Loan History View</span>
+                                <span class="interface-tag provides">Fine Payment UI</span>
+                            </div>
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Requires:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag requires">Member API</span>
+                                <span class="interface-tag requires">Payment Gateway</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component presentation">
+                        <div class="component-header">
+                            <div class="component-icon">📱</div>
+                            <div class="component-name">Mobile App</div>
+                            <div class="component-type">React Native</div>
+                        </div>
+                        <div class="component-description">
+                            Cross-platform mobile application providing member self-service capabilities and basic staff functions with offline support.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Mobile UI</span>
+                                <span class="interface-tag provides">Barcode Scanner</span>
+                                <span class="interface-tag provides">Push Notifications</span>
+                            </div>
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Requires:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag requires">Mobile API</span>
+                                <span class="interface-tag requires">Notification Service</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Application Layer Components -->
+            <div class="component-layer">
+                <div class="layer-title">⚙️ Application Layer Components</div>
+                <div class="components-grid">
+                    <div class="component application">
+                        <div class="component-header">
+                            <div class="component-icon">🌐</div>
+                            <div class="component-name">API Gateway</div>
+                            <div class="component-type">Express.js</div>
+                        </div>
+                        <div class="component-description">
+                            Central entry point for all API requests, handling routing, rate limiting, authentication validation, request/response transformation, and load balancing.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">REST API</span>
+                                <span class="interface-tag provides">Request Routing</span>
+                                <span class="interface-tag provides">Rate Limiting</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Routes requests to microservices<br>
+                                • Validates JWT tokens via Auth Service<br>
+                                • Implements circuit breaker patterns
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component application">
+                        <div class="component-header">
+                            <div class="component-icon">🔐</div>
+                            <div class="component-name">Authentication Service</div>
+                            <div class="component-type">Node.js</div>
+                        </div>
+                        <div class="component-description">
+                            Handles user authentication, authorization, JWT token generation/validation, session management, and role-based access control for both staff and members.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Authentication API</span>
+                                <span class="interface-tag provides">JWT Management</span>
+                                <span class="interface-tag provides">Role Validation</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • User Repository for credential validation<br>
+                                • Redis for session management<br>
+                                • LDAP/AD for staff authentication
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component application">
+                        <div class="component-header">
+                            <div class="component-icon">📊</div>
+                            <div class="component-name">Loan Processing Service</div>
+                            <div class="component-type">Node.js</div>
+                        </div>
+                        <div class="component-description">
+                            Core microservice handling the three-stage loan validation workflow, loan lifecycle management, renewal processing, and return handling.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Loan Processing API</span>
+                                <span class="interface-tag provides">Validation Workflow</span>
+                                <span class="interface-tag provides">Return Processing</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Inventory Service for book availability<br>
+                                • Member Service for validation<br>
+                                • Fine Service for outstanding balance check
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component application">
+                        <div class="component-header">
+                            <div class="component-icon">📚</div>
+                            <div class="component-name">Inventory Service</div>
+                            <div class="component-type">Node.js</div>
+                        </div>
+                        <div class="component-description">
+                            Manages book catalog, copy tracking, availability status updates, search functionality, and real-time inventory synchronization.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Inventory API</span>
+                                <span class="interface-tag provides">Search Service</span>
+                                <span class="interface-tag provides">Availability Check</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Book Repository for catalog data<br>
+                                • Elasticsearch for search functionality<br>
+                                • Redis for availability caching
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component application">
+                        <div class="component-header">
+                            <div class="component-icon">👥</div>
+                            <div class="component-name">Member Service</div>
+                            <div class="component-type">Node.js</div>
+                        </div>
+                        <div class="component-description">
+                            Handles member profile management, membership validation, account status tracking, borrowing history, and eligibility verification.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Member API</span>
+                                <span class="interface-tag provides">Validation Service</span>
+                                <span class="interface-tag provides">Profile Management</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Member Repository for profile data<br>
+                                • Membership Type configuration<br>
+                                • Audit Service for activity logging
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component application">
+                        <div class="component-header">
+                            <div class="component-icon">💰</div>
+                            <div class="component-name">Fine Management Service</div>
+                            <div class="component-type">Node.js</div>
+                        </div>
+                        <div class="component-description">
+                            Calculates overdue fines, processes payments, maintains fine history, integrates with payment gateways, and enforces fine threshold policies.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Fine Calculation API</span>
+                                <span class="interface-tag provides">Payment Processing</span>
+                                <span class="interface-tag provides">Balance Inquiry</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Fine Repository for balance data<br>
+                                • Payment Gateway for transactions<br>
+                                • Configuration Service for fine rates
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Business Logic Layer Components -->
+            <div class="component-layer">
+                <div class="layer-title">⚡ Business Logic Layer Components</div>
+                <div class="components-grid">
+                    <div class="component business">
+                        <div class="component-header">
+                            <div class="component-icon">✅</div>
+                            <div class="component-name">Validation Engine</div>
+                            <div class="component-type">Business Logic</div>
+                        </div>
+                        <div class="component-description">
+                            Implements the sequential three-stage validation logic: book availability, membership validity, and fine threshold verification with configurable rules.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Sequential Validation</span>
+                                <span class="interface-tag provides">Rule Engine</span>
+                                <span class="interface-tag provides">Validation Results</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Business Rules Repository<br>
+                                • Configuration Service<br>
+                                • Logging Service for audit trails
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component business">
+                        <div class="component-header">
+                            <div class="component-icon">🔄</div>
+                            <div class="component-name">Workflow Orchestrator</div>
+                            <div class="component-type">Business Logic</div>
+                        </div>
+                        <div class="component-description">
+                            Coordinates the loan processing workflow, manages state transitions, handles error scenarios, and ensures data consistency across services.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Workflow Management</span>
+                                <span class="interface-tag provides">State Coordination</span>
+                                <span class="interface-tag provides">Error Handling</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Message Queue for async processing<br>
+                                • Transaction Manager for consistency<br>
+                                • Event Store for workflow history
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component business">
+                        <div class="component-header">
+                            <div class="component-icon">📐</div>
+                            <div class="component-name">Business Rules Engine</div>
+                            <div class="component-type">Configuration</div>
+                        </div>
+                        <div class="component-description">
+                            Configurable rules engine for fine thresholds, loan periods, membership policies, renewal limits, and validation criteria with dynamic rule updates.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Rule Evaluation</span>
+                                <span class="interface-tag provides">Policy Management</span>
+                                <span class="interface-tag provides">Configuration API</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Configuration Repository<br>
+                                • Rule Validation Engine<br>
+                                • Change Management Service
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component business">
+                        <div class="component-header">
+                            <div class="component-icon">🔔</div>
+                            <div class="component-name">Notification Engine</div>
+                            <div class="component-type">Service</div>
+                        </div>
+                        <div class="component-description">
+                            Handles multi-channel notifications (email, SMS, push) for loan confirmations, due date reminders, fine notifications, and system alerts.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Multi-channel Messaging</span>
+                                <span class="interface-tag provides">Template Management</span>
+                                <span class="interface-tag provides">Delivery Tracking</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Email Service (SendGrid)<br>
+                                • SMS Service (Twilio)<br>
+                                • Template Repository
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component business">
+                        <div class="component-header">
+                            <div class="component-icon">📈</div>
+                            <div class="component-name">Analytics Engine</div>
+                            <div class="component-type">Analytics</div>
+                        </div>
+                        <div class="component-description">
+                            Processes loan data for reporting, generates statistics, provides insights on library usage patterns, and supports decision-making with data visualization.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Report Generation</span>
+                                <span class="interface-tag provides">Data Analytics</span>
+                                <span class="interface-tag provides">Usage Insights</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Data Warehouse for historical data<br>
+                                • Analytics Database (ClickHouse)<br>
+                                • Visualization Tools
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Layer Components -->
+            <div class="component-layer">
+                <div class="layer-title">🗄️ Data Persistence Layer Components</div>
+                <div class="components-grid">
+                    <div class="component data">
+                        <div class="component-header">
+                            <div class="component-icon">📊</div>
+                            <div class="component-name">Primary Database</div>
+                            <div class="component-type">PostgreSQL</div>
+                        </div>
+                        <div class="component-description">
+                            Main relational database storing books, members, loans, fines, and transactional data with ACID compliance, triggers, and stored procedures.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Transactional Storage</span>
+                                <span class="interface-tag provides">ACID Compliance</span>
+                                <span class="interface-tag provides">Referential Integrity</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Connection Pool Management<br>
+                                • Backup and Recovery System<br>
+                                • Database Monitoring Tools
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component data">
+                        <div class="component-header">
+                            <div class="component-icon">⚡</div>
+                            <div class="component-name">Cache Layer</div>
+                            <div class="component-type">Redis</div>
+                        </div>
+                        <div class="component-description">
+                            High-performance in-memory caching for frequently accessed data like book availability, member sessions, and validation results to improve response times.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">In-Memory Caching</span>
+                                <span class="interface-tag provides">Session Storage</span>
+                                <span class="interface-tag provides">Pub/Sub Messaging</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Cache Invalidation Strategy<br>
+                                • Redis Cluster Configuration<br>
+                                • Memory Management Policies
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component data">
+                        <div class="component-header">
+                            <div class="component-icon">🔍</div>
+                            <div class="component-name">Search Engine</div>
+                            <div class="component-type">Elasticsearch</div>
+                        </div>
+                        <div class="component-description">
+                            Full-text search capabilities for book catalog, advanced search filters, faceted search, and real-time indexing for improved discoverability.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Full-Text Search</span>
+                                <span class="interface-tag provides">Faceted Search</span>
+                                <span class="interface-tag provides">Real-time Indexing</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Index Management Service<br>
+                                • Search Query Optimization<br>
+                                • Data Synchronization Pipeline
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component data">
+                        <div class="component-header">
+                            <div class="component-icon">📋</div>
+                            <div class="component-name">Read Replicas</div>
+                            <div class="component-type">PostgreSQL</div>
+                        </div>
+                        <div class="component-description">
+                            Read-only database replicas for improved query performance, reporting workloads, and analytics without impacting the primary database performance.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Read Scaling</span>
+                                <span class="interface-tag provides">Report Queries</span>
+                                <span class="interface-tag provides">Load Distribution</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Replication Management<br>
+                                • Load Balancer Configuration<br>
+                                • Lag Monitoring System
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component data">
+                        <div class="component-header">
+                            <div class="component-icon">📄</div>
+                            <div class="component-name">Document Store</div>
+                            <div class="component-type">MongoDB</div>
+                        </div>
+                        <div class="component-description">
+                            Stores unstructured data like system logs, audit trails, configuration documents, and flexible schema data that doesn't fit relational models.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Document Storage</span>
+                                <span class="interface-tag provides">Flexible Schema</span>
+                                <span class="interface-tag provides">JSON Queries</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Index Optimization Strategy<br>
+                                • Document Validation Rules<br>
+                                • Aggregation Pipeline Tools
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- External Integration Components -->
+            <div class="component-layer">
+                <div class="layer-title">🔌 External Integration Components</div>
+                <div class="components-grid">
+                    <div class="component external">
+                        <div class="component-header">
+                            <div class="component-icon">💳</div>
+                            <div class="component-name">Payment Gateway</div>
+                            <div class="component-type">External API</div>
+                        </div>
+                        <div class="component-description">
+                            Integration with Stripe/PayPal for processing fine payments, handling refunds, payment notifications, and maintaining PCI compliance.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Payment Processing</span>
+                                <span class="interface-tag provides">Refund Management</span>
+                                <span class="interface-tag provides">Transaction Webhooks</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • SSL Certificate Management<br>
+                                • Webhook Endpoint Security<br>
+                                • Payment Reconciliation Service
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component external">
+                        <div class="component-header">
+                            <div class="component-icon">📚</div>
+                            <div class="component-name">Library Management System</div>
+                            <div class="component-type">Legacy Integration</div>
+                        </div>
+                        <div class="component-description">
+                            Integration with existing Integrated Library System (ILS) for data synchronization, catalog updates, and maintaining compatibility with legacy workflows.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Catalog Sync</span>
+                                <span class="interface-tag provides">Member Data Sync</span>
+                                <span class="interface-tag provides">Legacy Support</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Data Transformation Layer<br>
+                                • Sync Scheduling Service<br>
+                                • Conflict Resolution Engine
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component external">
+                        <div class="component-header">
+                            <div class="component-icon">📧</div>
+                            <div class="component-name">Email Service</div>
+                            <div class="component-type">SendGrid</div>
+                        </div>
+                        <div class="component-description">
+                            Email delivery service for notifications, receipts, due date reminders, system communications, and transactional email management.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Email Delivery</span>
+                                <span class="interface-tag provides">Template Management</span>
+                                <span class="interface-tag provides">Delivery Analytics</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Email Template Repository<br>
+                                • Bounce Handling Service<br>
+                                • Delivery Status Tracking
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component external">
+                        <div class="component-header">
+                            <div class="component-icon">📱</div>
+                            <div class="component-name">SMS Service</div>
+                            <div class="component-type">Twilio</div>
+                        </div>
+                        <div class="component-description">
+                            SMS notifications for urgent communications, due date alerts, two-factor authentication, and emergency library closures.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">SMS Delivery</span>
+                                <span class="interface-tag provides">2FA Support</span>
+                                <span class="interface-tag provides">Delivery Confirmation</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Message Queue for SMS batching<br>
+                                • Rate Limiting Service<br>
+                                • Delivery Status Webhooks
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="component external">
+                        <div class="component-header">
+                            <div class="component-icon">🔐</div>
+                            <div class="component-name">Identity Provider</div>
+                            <div class="component-type">LDAP/AD</div>
+                        </div>
+                        <div class="component-description">
+                            LDAP/Active Directory integration for staff authentication, single sign-on capabilities, and centralized user management.
+                        </div>
+                        <div class="component-interfaces">
+                            <div class="interfaces-title">Provides:</div>
+                            <div class="interface-list">
+                                <span class="interface-tag provides">Staff Authentication</span>
+                                <span class="interface-tag provides">SSO Integration</span>
+                                <span class="interface-tag provides">User Directory</span>
+                            </div>
+                        </div>
+                        <div class="dependencies">
+                            <div class="dependencies-title">Dependencies:</div>
+                            <div class="dependency-list">
+                                • Directory Synchronization<br>
+                                • Group Mapping Service<br>
+                                • Authentication Protocol Support
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Interface Flow Documentation -->
+        <div class="interface-flows">
+            <h3>🔄 Key Interface Flows</h3>
+            <div class="flow-grid">
+                <div class="flow-item">
+                    <div class="flow-title">Loan Processing Flow</div>
+                    <div class="flow-description">
+                        Complete workflow for processing a new loan request through the three-stage validation system.
+                    </div>
+                    <div class="flow-path">
+                        Staff Client → API Gateway → Loan Service → Validation Engine → 
+                        [Inventory Service + Member Service + Fine Service] → Workflow Orchestrator → Database
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Book Availability Check</div>
+                    <div class="flow-description">
+                        Real-time book availability verification with caching optimization.
+                    </div>
+                    <div class="flow-path">
+                        Client → API Gateway → Inventory Service → Redis Cache → 
+                        [Cache Hit: Return] OR [Cache Miss: PostgreSQL → Update Cache → Return]
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Member Validation Process</div>
+                    <div class="flow-description">
+                        Comprehensive member eligibility check including membership status and fine verification.
+                    </div>
+                    <div class="flow-path">
+                        Loan Service → Member Service → [Membership Check + Fine Service] → 
+                        Business Rules Engine → Validation Result
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Fine Payment Processing</div>
+                    <div class="flow-description">
+                        End-to-end fine payment workflow with external payment gateway integration.
+                    </div>
+                    <div class="flow-path">
+                        Staff Client → Fine Service → Payment Gateway → Payment Confirmation → 
+                        Database Update → Receipt Generation → Notification Engine
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Search and Discovery</div>
+                    <div class="flow-description">
+                        Book search functionality with full-text search and availability integration.
+                    </div>
+                    <div class="flow-path">
+                        Client → API Gateway → Inventory Service → Elasticsearch → 
+                        [Search Results + Availability Check] → Formatted Response
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Notification Delivery</div>
+                    <div class="flow-description">
+                        Multi-channel notification system for loan confirmations and reminders.
+                    </div>
+                    <div class="flow-path">
+                        Trigger Event → Notification Engine → [Email Service + SMS Service] → 
+                        Template Processing → Delivery Tracking → Status Update
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technology Implementation Details -->
+        <div class="tech-details">
+            <h3>🛠️ Component Implementation Technologies</h3>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h4>Frontend Components</h4>
+                    <ul class="tech-list">
+                        <li>React 18+ with TypeScript</li>
+                        <li>Material-UI for design system</li>
+                        <li>Redux Toolkit for state management</li>
+                        <li>React Query for API caching</li>
+                        <li>React Native for mobile apps</li>
+                        <li>Progressive Web App (PWA) support</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Backend Services</h4>
+                    <ul class="tech-list">
+                        <li>Node.js with Express framework</li>
+                        <li>TypeScript for type safety</li>
+                        <li>Microservices architecture</li>
+                        <li>Docker containerization</li>
+                        <li>Kubernetes orchestration</li>
+                        <li>NGINX for load balancing</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Data Storage</h4>
+                    <ul class="tech-list">
+                        <li>PostgreSQL 14+ (Primary database)</li>
+                        <li>Redis 7+ (Caching and sessions)</li>
+                        <li>Elasticsearch 8+ (Search engine)</li>
+                        <li>MongoDB 6+ (Document storage)</li>
+                        <li>PgBouncer (Connection pooling)</li>
+                        <li>WAL-E (Backup and archiving)</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Integration Layer</h4>
+                    <ul class="tech-list">
+                        <li>REST API design</li>
+                        <li>GraphQL for complex queries</li>
+                        <li>WebSocket for real-time updates</li>
+                        <li>Message queues (RabbitMQ/Kafka)</li>
+                        <li>API Gateway (Kong/Zuul)</li>
+                        <li>Service mesh (Istio)</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Security & Monitoring</h4>
+                    <ul class="tech-list">
+                        <li>JWT authentication</li>
+                        <li>OAuth 2.0 / OpenID Connect</li>
+                        <li>HTTPS/TLS 1.3 encryption</li>
+                        <li>Prometheus monitoring</li>
+                        <li>ELK stack for logging</li>
+                        <li>Grafana dashboards</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>DevOps & Deployment</h4>
+                    <ul class="tech-list">
+                        <li>GitLab CI/CD pipelines</li>
+                        <li>Infrastructure as Code (Terraform)</li>
+                        <li>Blue-green deployments</li>
+                        <li>Automated testing (Jest, Cypress)</li>
+                        <li>Security scanning (SonarQube)</li>
+                        <li>Performance testing (k6)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Component Dependencies Legend -->
+        <div class="legend">
+            <h3>🎯 Component Relationship Legend</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #3498db;"></div>
+                    <span>Presentation Layer Components</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #e74c3c;"></div>
+                    <span>Application Services</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f39c12;"></div>
+                    <span>Business Logic Components</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #27ae60;"></div>
+                    <span>Data Storage Components</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #9b59b6;"></div>
+                    <span>External Integrations</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #34495e;"></div>
+                    <span>Cross-Cutting Concerns</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

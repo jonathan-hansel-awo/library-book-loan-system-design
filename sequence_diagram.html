@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Book Loan System - Sequence Diagram</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .diagram-container {
+            padding: 40px;
+            background: #f8f9fa;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .sequence-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 1400px;
+            position: relative;
+        }
+        
+        .actors-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .actor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+            position: relative;
+        }
+        
+        .actor-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            min-width: 100px;
+            margin-bottom: 15px;
+        }
+        
+        .actor-box.external {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+        
+        .actor-box.service {
+            background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+        }
+        
+        .actor-box.repository {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+        
+        .lifeline {
+            width: 3px;
+            background: #dee2e6;
+            min-height: 800px;
+            position: relative;
+            margin: 0 auto;
+        }
+        
+        .messages-container {
+            position: absolute;
+            top: 120px;
+            left: 0;
+            right: 0;
+            height: 800px;
+        }
+        
+        .message {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            z-index: 10;
+        }
+        
+        .message-line {
+            height: 2px;
+            background: #495057;
+            position: relative;
+            flex: 1;
+            margin: 0 10px;
+        }
+        
+        .message-line.return {
+            background: #6c757d;
+            border-top: 2px dashed #6c757d;
+            background: none;
+        }
+        
+        .message-arrow {
+            position: absolute;
+            right: -8px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #495057;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .message-arrow.return {
+            border-left-color: #6c757d;
+            left: -8px;
+            right: auto;
+            border-left: none;
+            border-right: 8px solid #6c757d;
+        }
+        
+        .message-label {
+            background: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #495057;
+            font-weight: 500;
+            border: 1px solid #dee2e6;
+            white-space: nowrap;
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .message-label.async {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+        
+        .message-label.return {
+            background: #f8f9fa;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .activation-box {
+            position: absolute;
+            width: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+            z-index: 5;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .activation-box.validation {
+            background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+        }
+        
+        .activation-box.repository {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+        
+        .step-number {
+            position: absolute;
+            left: -30px;
+            top: -8px;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .note {
+            position: absolute;
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.8em;
+            color: #856404;
+            max-width: 200px;
+            z-index: 15;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .note::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 6px solid #ffeaa7;
+        }
+        
+        .validation-group {
+            position: absolute;
+            background: rgba(243, 156, 18, 0.1);
+            border: 2px dashed #f39c12;
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 1;
+        }
+        
+        .group-label {
+            position: absolute;
+            top: -12px;
+            left: 10px;
+            background: #f39c12;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .legend {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .legend h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .legend-category {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .legend-category h4 {
+            margin: 0 0 12px 0;
+            color: #3498db;
+            font-size: 1.1em;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .legend-symbol {
+            width: 20px;
+            height: 3px;
+            background: #495057;
+            position: relative;
+        }
+        
+        .legend-symbol.dashed {
+            background: none;
+            border-top: 2px dashed #6c757d;
+        }
+        
+        .legend-symbol::after {
+            content: '';
+            position: absolute;
+            right: -3px;
+            top: -2px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid #495057;
+            border-top: 3px solid transparent;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .scenario-tabs {
+            background: white;
+            border-radius: 12px;
+            margin-top: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .tab-buttons {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .tab-button {
+            padding: 15px 25px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+        
+        .tab-button.active {
+            background: white;
+            color: #495057;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .tab-content {
+            padding: 25px;
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .scenario-description {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .scenario-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .scenario-text {
+            color: #6c757d;
+            line-height: 1.5;
+        }
+        
+        .steps-summary {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .steps-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .step-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .step-num {
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .step-desc {
+            color: #495057;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .timing-info {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .timing-title {
+            font-weight: 600;
+            color: #0056b3;
+            margin-bottom: 8px;
+        }
+        
+        .timing-details {
+            font-size: 0.9em;
+            color: #495057;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Library Book Loan System</h1>
+            <p class="subtitle">Sequence Diagram - Message Flow for Loan Processing</p>
+        </div>
+        
+        <div class="diagram-container">
+            <!-- Main Sequence Diagram -->
+            <div class="sequence-diagram">
+                <!-- Actors Row -->
+                <div class="actors-row">
+                    <div class="actor">
+                        <div class="actor-box external">Staff User</div>
+                        <div class="lifeline"></div>
+                    </div>
+                    <div class="actor">
+                        <div class="actor-box">Loan Controller</div>
+                        <div class="lifeline"></div>
+                    </div>
+                    <div class="actor">
+                        <div class="actor-box service">Loan Service</div>
+                        <div class="lifeline"></div>
+                    </div>
+                    <div class="actor">
+                        <div class="actor-box service">Validation Engine</div>
+                        <div class="lifeline"></div>
+                    </div>
+                    <div class="actor">
+                        <div class="actor-box service">Inventory Service</div>
+                        <div class="lifeline"></div>
+                    </div>
+                    <div class="actor">
+                        <div class="actor-box service">Member Service</div>
+                        <div class="lifeline"></div>
+                    </div>
+                    <div class="actor">
+                        <div class="actor-box service">Fine Service</div>
+                        <div class="lifeline"></div>
+                    </div>
+                    <div class="actor">
+                        <div class="actor-box repository">Database</div>
+                        <div class="lifeline"></div>
+                    </div>
+                </div>
+                
+                <!-- Messages Container -->
+                <div class="messages-container">
+                    
+                    <!-- Message 1: Initial Loan Request -->
+                    <div class="message" style="top: 20px;">
+                        <div class="step-number">1</div>
+                        <div style="width: 12.5%;"></div>
+                        <div class="message-line">
+                            <div class="message-arrow"></div>
+                            <div class="message-label">POST /loans<br/>processLoan(request)</div>
+                        </div>
+                        <div style="width: 75%;"></div>
+                    </div>
+                    
+                    <!-- Activation Box for Loan Controller -->
+                    <div class="activation-box" style="top: 15px; height: 40px; left: 12.5%; transform: translateX(-50%);"></div>
+                    
+                    <!-- Message 2: Service Call -->
+                    <div class="message" style="top: 60px;">
+                        <div class="step-number">2</div>
+                        <div style="width: 25%;"></div>
+                        <div class="message-line">
+                            <div class="message-arrow"></div>
+                            <div class="message-label">processLoanRequest(request)</div>
+                        </div>
+                        <div style="width: 62.5%;"></div>
+                    </div>
+                    
+                    <!-- Activation Box for Loan Service -->
+                    <div class="activation-box" style="top: 55px; height: 460px; left: 25%; transform: translateX(-50%);"></div>
+                    
+                    <!-- Validation Group -->
+                    <div class="validation-group" style="top: 85px; left: 25%; width: 65%; height: 380px;">
+                        <div class="group-label">Three-Stage Validation Workflow</div>
+                        
+                        <!-- Message 3: Start Validation -->
+                        <div class="message" style="top: 40px; position: absolute; width: 100%;">
+                            <div class="step-number">3</div>
+                            <div style="width: 25%;"></div>
+                            <div class="message-line">
+                                <div class="message-arrow"></div>
+                                <div class="message-label">performSequentialValidation(request)</div>
+                            </div>
+                            <div style="width: 62.5%;"></div>
+                        </div>
+                        
+                        <!-- Activation Box for Validation Engine -->
+                        <div class="activation-box validation" style="top: 35px; height: 320px; left: 37.5%; transform: translateX(-50%); position: absolute;"></div>
+                        
+                        <!-- Stage 1: Book Availability -->
+                        <div class="message" style="top: 80px; position: absolute; width: 100%;">
+                            <div class="step-number">4</div>
+                            <div style="width: 37.5%;"></div>
+                            <div class="message-line">
+                                <div class="message-arrow"></div>
+                                <div class="message-label">checkBookAvailability(bookId)</div>
+                            </div>
+                            <div style="width: 50%;"></div>
+                        </div>
+                        
+                        <div class="activation-box" style="top: 75px; height: 60px; left: 50%; transform: translateX(-50%); position: absolute;"></div>
+                        
+                        <div class="message" style="top: 110px; position: absolute; width: 100%;">
+                            <div class="step-number">5</div>
+                            <div style="width: 75%;"></div>
+                            <div class="message-line">
+                                <div class="message-arrow"></div>
+                                <div class="message-label">findAvailableCopy(bookId)</div>
+                            </div>
+                            <div style="width: 12.5%;"></div>
+                        </div>
+                        
+                        <div class="activation-box repository" style="top: 105px; height: 30px; left: 87.5%; transform: translateX(-50%); position: absolute;"></div>
+                        
+                        <div class="message" style="top: 140px; position: absolute; width: 100%;">
+                            <div class="step-number">6</div>
+                            <div style="width: 75%;"></div>
+                            <div class="message-line return">
+                                <div class="message-arrow return"></div>
+                                <div class="message-label return">BookCopy available</div>
+                            </div>
+                            <div style="width: 12.5%;"></div>
+                        </div>
+                        
+                        <div class="message" style="top: 160px; position: absolute; width: 100%;">
+                            <div class="step-number">7</div>
+                            <div style="width: 50%;"></div>
+                            <div class="message-line return">
+                                <div class="message-arrow return"></div>
+                                <div class="message-label return">ValidationResult: PASS</div>
+                            </div>
+                            <div style="width: 37.5%;"></div>
+                        </div>
+                        
+                        <!-- Stage 2: Member Validation -->
+                        <div class="message" style="top: 190px; position: absolute; width: 100%;">
+                            <div class="step-number">8</div>
+                            <div style="width: 37.5%;"></div>
+                            <div class="message-line">
+                                <div class="message-arrow"></div>
+                                <div class="message-label">validateMemberEligibility(memberId)</div>
+                            </div>
+                            <div style="width: 37.5%;"></div>
+                        </div>
+                        
+                        <div class="activation-box" style="top: 185px; height: 60px; left: 62.5%; transform: translateX(-50%); position: absolute;"></div>
+                        
+                        <div class="message" style="top: 220px; position: absolute; width: 100%;">
+                            <div class="step-number">9</div>
+                            <div style="width: 75%;"></div>
+                            <div class="message-line">
+                                <div class="message-arrow"></div>
+                                <div class="message-label">findByMemberId(memberId)</div>
+                            </div>
+                            <div style="width: 12.5%;"></div>
+                        </div>
+                        
+                        <div class="activation-box repository" style="top: 215px; height: 30px; left: 87.5%; transform: translateX(-50%); position: absolute;"></div>
+                        
+                        <div class="message" style="top: 250px; position: absolute; width: 100%;">
+                            <div class="step-number">10</div>
+                            <div style="width: 62.5%;"></div>
+                            <div class="message-line return">
+                                <div class="message-arrow return"></div>
+                                <div class="message-label return">ValidationResult: PASS</div>
+                            </div>
+                            <div style="width: 25%;"></div>
+                        </div>
+                        
+                        <!-- Stage 3: Fine Threshold Check -->
+                        <div class="message" style="top: 280px; position: absolute; width: 100%;">
+                            <div class="step-number">11</div>
+                            <div style="width: 37.5%;"></div>
+                            <div class="message-line">
+                                <div class="message-arrow"></div>
+                                <div class="message-label">validateFineThreshold(memberId)</div>
+                            </div>
+                            <div style="width: 25%;"></div>
+                        </div>
+                        
+                        <div class="activation-box" style="top: 275px; height: 60px; left: 75%; transform: translateX(-50%); position: absolute;"></div>
+                        
+                        <div class="message" style="top: 310px; position: absolute; width: 100%;">
+                            <div class="step-number">12</div>
+                            <div style="width: 87.5%;"></div>
+                            <div class="message-line">
+                                <div class="message-arrow"></div>
+                                <div class="message-label">calculateOutstandingFines(memberId)</div>
+                            </div>
+                            <div style="width: 0%;"></div>
+                        </div>
+                        
+                        <div class="activation-box repository" style="top: 305px; height: 30px; left: 87.5%; transform: translateX(-50%); position: absolute;"></div>
+                        
+                        <div class="message" style="top: 340px; position: absolute; width: 100%;">
+                            <div class="step-number">13</div>
+                            <div style="width: 75%;"></div>
+                            <div class="message-line return">
+                                <div class="message-arrow return"></div>
+                                <div class="message-label return">ValidationResult: PASS ($5.50 ≤ $10.00)</div>
+                            </div>
+                            <div style="width: 12.5%;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Message 14: Validation Complete -->
+                    <div class="message" style="top: 500px;">
+                        <div class="step-number">14</div>
+                        <div style="width: 37.5%;"></div>
+                        <div class="message-line return">
+                            <div class="message-arrow return"></div>
+                            <div class="message-label return">OverallValidationResult: ALL_PASSED</div>
+                        </div>
+                        <div style="width: 50%;"></div>
+                    </div>
+                    
+                    <!-- Message 15: Create Loan -->
+                    <div class="message" style="top: 540px;">
+                        <div class="step-number">15</div>
+                        <div style="width: 25%;"></div>
+                        <div class="message-line">
+                            <div class="message-arrow"></div>
+                            <div class="message-label">issueLoan(member, bookCopy)</div>
+                        </div>
+                        <div style="width: 62.5%;"></div>
+                    </div>
+                    
+                    <div class="message" style="top: 570px;">
+                        <div class="step-number">16</div>
+                        <div style="width: 87.5%;"></div>
+                        <div class="message-line">
+                            <div class="message-arrow"></div>
+                            <div class="message-label">save(newLoan)</div>
+                        </div>
+                        <div style="width: 0%;"></div>
+                    </div>
+                    
+                    <div class="activation-box repository" style="top: 565px; height: 40px; left: 87.5%; transform: translateX(-50%);"></div>
+                    
+                    <div class="message" style="top: 600px;">
+                        <div class="step-number">17</div>
+                        <div style="width: 87.5%;"></div>
+                        <div class="message-line return">
+                            <div class="message-arrow return"></div>
+                            <div class="message-label return">Loan created successfully</div>
+                        </div>
+                        <div style="width: 0%;"></div>
+                    </div>
+                    
+                    <!-- Message 18: Update Book Status -->
+                    <div class="message" style="top: 630px;">
+                        <div class="step-number">18</div>
+                        <div style="width: 50%;"></div>
+                        <div class="message-line">
+                            <div class="message-arrow"></div>
+                            <div class="message-label">updateCopyStatus(copyId, CHECKED_OUT)</div>
+                        </div>
+                        <div style="width: 37.5%;"></div>
+                    </div>
+                    
+                    <div class="activation-box" style="top: 625px; height: 40px; left: 50%; transform: translateX(-50%);"></div>
+                    
+                    <div class="message" style="top: 660px;">
+                        <div class="step-number">19</div>
+                        <div style="width: 25%;"></div>
+                        <div class="message-line return">
+                            <div class="message-arrow return"></div>
+                            <div class="message-label return">LoanResult: SUCCESS</div>
+                        </div>
+                        <div style="width: 62.5%;"></div>
+                    </div>
+                    
+                    <!-- Final Response -->
+                    <div class="message" style="top: 690px;">
+                        <div class="step-number">20</div>
+                        <div style="width: 12.5%;"></div>
+                        <div class="message-line return">
+                            <div class="message-arrow return"></div>
+                            <div class="message-label return">HTTP 201: LoanResponseDto</div>
+                        </div>
+                        <div style="width: 75%;"></div>
+                    </div>
+                    
+                    <!-- Notes -->
+                    <div class="note" style="top: 100px; right: 20px;">
+                        <strong>Stage 1:</strong> Book availability check must pass before proceeding to member validation
+                    </div>
+                    
+                    <div class="note" style="top: 250px; right: 20px;">
+                        <strong>Stage 2:</strong> Member eligibility includes status and membership expiry validation
+                    </div>
+                    
+                    <div class="note" style="top: 380px; right: 20px;">
+                        <strong>Stage 3:</strong> Fine threshold check ensures outstanding fines ≤ $10.00
+                    </div>
+                    
+                    <div class="note" style="top: 580px; right: 20px;">
+                        <strong>Success:</strong> Loan created and book copy status updated atomically
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alternative Scenarios -->
+        <div class="scenario-tabs">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="showTab('success')">✅ Success Flow</button>
+                <button class="tab-button" onclick="showTab('book-unavailable')">❌ Book Unavailable</button>
+                <button class="tab-button" onclick="showTab('member-invalid')">❌ Invalid Member</button>
+                <button class="tab-button" onclick="showTab('excessive-fines')">❌ Excessive Fines</button>
+            </div>
+            
+            <div id="success" class="tab-content active">
+                <div class="scenario-description">
+                    <div class="scenario-title">Successful Loan Processing</div>
+                    <div class="scenario-text">
+                        This sequence shows the complete happy path where all three validation stages pass and a loan is successfully created. The system processes the request through book availability, member eligibility, and fine threshold checks before issuing the loan.
+                    </div>
+                </div>
+                
+                <div class="steps-summary">
+                    <div class="steps-title">📋 Key Steps in Success Flow</div>
+                    <div class="step-item">
+                        <div class="step-num">1-2</div>
+                        <div class="step-desc">Staff user submits loan request via REST API, controller delegates to loan service</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">3-7</div>
+                        <div class="step-desc"><strong>Stage 1:</strong> Validation engine checks book availability through inventory service, finds available copy</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">8-10</div>
+                        <div class="step-desc"><strong>Stage 2:</strong> Member service validates membership status and expiry date - member is active and current</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">11-13</div>
+                        <div class="step-desc"><strong>Stage 3:</strong> Fine service calculates outstanding fines ($5.50) which is below threshold ($10.00)</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">14-17</div>
+                        <div class="step-desc">All validations pass, loan service creates new loan record in database</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">18-20</div>
+                        <div class="step-desc">Book copy status updated to CHECKED_OUT, success response returned to staff user</div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-title">⏱️ Performance Expectations</div>
+                    <div class="timing-details">
+                        Total processing time: 2-4 seconds | Database queries: 4-6 | Cache hits: 2-3 | Sequential validation ensures fail-fast behavior
+                    </div>
+                </div>
+            </div>
+            
+            <div id="book-unavailable" class="tab-content">
+                <div class="scenario-description">
+                    <div class="scenario-title">Book Unavailable Scenario</div>
+                    <div class="scenario-text">
+                        This flow demonstrates early termination when the first validation stage fails. The system checks book availability and finds no available copies, immediately returning an error without proceeding to member or fine validation.
+                    </div>
+                </div>
+                
+                <div class="steps-summary">
+                    <div class="steps-title">📋 Truncated Flow - Early Failure</div>
+                    <div class="step-item">
+                        <div class="step-num">1-3</div>
+                        <div class="step-desc">Request initiated and validation engine starts sequential processing</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">4-5</div>
+                        <div class="step-desc"><strong>Stage 1 FAIL:</strong> Inventory service finds no available copies (all checked out or reserved)</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">6</div>
+                        <div class="step-desc">Validation engine receives FAIL result for book availability</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">7</div>
+                        <div class="step-desc">Sequential validation stops immediately - stages 2 & 3 are skipped</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">8</div>
+                        <div class="step-desc">Loan service returns validation error to controller</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">9</div>
+                        <div class="step-desc">HTTP 400 Bad Request returned with specific error: "Book not available"</div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-title">⚡ Fast Failure</div>
+                    <div class="timing-details">
+                        Processing time: &lt;1 second | Database queries: 1-2 | Early termination saves resources and provides immediate feedback
+                    </div>
+                </div>
+            </div>
+            
+            <div id="member-invalid" class="tab-content">
+                <div class="scenario-description">
+                    <div class="scenario-title">Invalid Member Scenario</div>
+                    <div class="scenario-text">
+                        This sequence shows failure at the second validation stage. Book availability passes, but member validation fails due to expired membership or suspended account status.
+                    </div>
+                </div>
+                
+                <div class="steps-summary">
+                    <div class="steps-title">📋 Second Stage Failure</div>
+                    <div class="step-item">
+                        <div class="step-num">1-7</div>
+                        <div class="step-desc"><strong>Stage 1 PASS:</strong> Book availability check succeeds, available copy found</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">8-9</div>
+                        <div class="step-desc"><strong>Stage 2 FAIL:</strong> Member service finds expired membership or suspended status</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">10</div>
+                        <div class="step-desc">Member validation returns FAIL with specific reason (expired/suspended)</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">11</div>
+                        <div class="step-desc">Sequential validation stops - fine check (stage 3) is skipped</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">12</div>
+                        <div class="step-desc">HTTP 400 returned with error: "Invalid or expired membership"</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">13</div>
+                        <div class="step-desc">Response includes resolution steps (renew membership, contact admin)</div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-title">🔍 Partial Processing</div>
+                    <div class="timing-details">
+                        Processing time: 1-2 seconds | Database queries: 2-3 | Stage 1 passed but stage 2 failed, stage 3 skipped
+                    </div>
+                </div>
+            </div>
+            
+            <div id="excessive-fines" class="tab-content">
+                <div class="scenario-description">
+                    <div class="scenario-title">Excessive Fines Scenario</div>
+                    <div class="scenario-text">
+                        This flow shows failure at the final validation stage. Both book availability and member validity pass, but the member has outstanding fines exceeding the $10.00 threshold.
+                    </div>
+                </div>
+                
+                <div class="steps-summary">
+                    <div class="steps-title">📋 Final Stage Failure</div>
+                    <div class="step-item">
+                        <div class="step-num">1-7</div>
+                        <div class="step-desc"><strong>Stage 1 PASS:</strong> Book availability check succeeds</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">8-10</div>
+                        <div class="step-desc"><strong>Stage 2 PASS:</strong> Member validation succeeds - active membership</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">11-12</div>
+                        <div class="step-desc"><strong>Stage 3 FAIL:</strong> Fine service calculates outstanding fines = $15.50</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">13</div>
+                        <div class="step-desc">Fine threshold validation fails ($15.50 > $10.00 limit)</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">14</div>
+                        <div class="step-desc">Overall validation result: FAIL due to excessive fines</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">15</div>
+                        <div class="step-desc">HTTP 400 returned with error: "Outstanding fines exceed $10.00"</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">16</div>
+                        <div class="step-desc">Response includes fine breakdown and payment options</div>
+                    </div>
+                </div>
+                
+                <div class="timing-info">
+                    <div class="timing-title">🔄 Complete Validation</div>
+                    <div class="timing-details">
+                        Processing time: 2-3 seconds | Database queries: 4-5 | All three stages processed, failure at final step
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sequence Diagram Legend -->
+        <div class="legend">
+            <h3>🎯 Sequence Diagram Legend</h3>
+            <div class="legend-grid">
+                <div class="legend-category">
+                    <h4>Message Types</h4>
+                    <div class="legend-item">
+                        <div class="legend-symbol"></div>
+                        <span>Synchronous method call</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-symbol dashed"></div>
+                        <span>Return message / Response</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 20px; background: #667eea; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.7em;">1</div>
+                        <span>Step number in sequence</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Actor Types</h4>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 15px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 3px;"></div>
+                        <span>External Actor (Staff User)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 3px;"></div>
+                        <span>Controller Layer</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 15px; background: linear-gradient(135deg, #f39c12 0%, #d68910 100%); border-radius: 3px;"></div>
+                        <span>Service Layer</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 15px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); border-radius: 3px;"></div>
+                        <span>Data/Repository Layer</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Activation Boxes</h4>
+                    <div class="legend-item">
+                        <div style="width: 12px; height: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 2px;"></div>
+                        <span>Object lifetime / Processing time</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 12px; height: 20px; background: linear-gradient(135deg, #f39c12 0%, #d68910 100%); border-radius: 2px;"></div>
+                        <span>Validation processing</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 12px; height: 20px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%); border-radius: 2px;"></div>
+                        <span>Database transaction</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Special Elements</h4>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 15px; background: rgba(243, 156, 18, 0.2); border: 1px dashed #f39c12; border-radius: 3px;"></div>
+                        <span>Validation workflow grouping</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 15px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 3px;"></div>
+                        <span>Explanatory notes</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 3px; height: 20px; background: #dee2e6; border-radius: 1px;"></div>
+                        <span>Object lifeline</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Implementation Details -->
+        <div class="tech-details">
+            <h3>🛠️ Technical Implementation Notes</h3>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h4>Sequential Validation Logic</h4>
+                    <ul class="tech-list">
+                        <li><strong>Fail-Fast Principle:</strong> Validation stops at first failure</li>
+                        <li><strong>Resource Optimization:</strong> Avoid unnecessary database calls</li>
+                        <li><strong>Clear Error Messages:</strong> Specific failure reasons provided</li>
+                        <li><strong>Stateless Processing:</strong> Each validation is independent</li>
+                        <li><strong>Atomic Operations:</strong> Loan creation and status updates in transaction</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Error Handling Strategy</h4>
+                    <ul class="tech-list">
+                        <li><strong>HTTP Status Codes:</strong> 400 for validation failures, 201 for success</li>
+                        <li><strong>Structured Errors:</strong> Consistent error response format</li>
+                        <li><strong>Resolution Guidance:</strong> Next steps provided for failures</li>
+                        <li><strong>Logging:</strong> All validation steps logged for audit</li>
+                        <li><strong>Monitoring:</strong> Performance metrics collected per stage</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Performance Considerations</h4>
+                    <ul class="tech-list">
+                        <li><strong>Database Optimization:</strong> Indexed queries for fast lookups</li>
+                        <li><strong>Caching Strategy:</strong> Book availability cached for performance</li>
+                        <li><strong>Connection Pooling:</strong> Efficient database connection management</li>
+                        <li><strong>Async Processing:</strong> Non-blocking I/O where possible</li>
+                        <li><strong>Timeout Management:</strong> Request timeouts prevent hanging</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Transaction Management</h4>
+                    <ul class="tech-list">
+                        <li><strong>ACID Compliance:</strong> Loan creation maintains data integrity</li>
+                        <li><strong>Rollback Capability:</strong> Failed loans don't affect database state</li>
+                        <li><strong>Isolation Levels:</strong> Appropriate isolation for concurrent access</li>
+                        <li><strong>Deadlock Prevention:</strong> Consistent resource ordering</li>
+                        <li><strong>Audit Trail:</strong> All changes logged for compliance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

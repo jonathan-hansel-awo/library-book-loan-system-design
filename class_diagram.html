@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Book Loan System - Class Diagram</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .diagram-container {
+            padding: 40px;
+            background: #f8f9fa;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .class-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .class-box {
+            background: white;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .class-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .class-box.entity { border-left: 5px solid #3498db; }
+        .class-box.service { border-left: 5px solid #e74c3c; }
+        .class-box.controller { border-left: 5px solid #f39c12; }
+        .class-box.repository { border-left: 5px solid #27ae60; }
+        .class-box.dto { border-left: 5px solid #9b59b6; }
+        .class-box.enum { border-left: 5px solid #95a5a6; }
+        
+        .class-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 15px 20px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+        
+        .class-stereotype {
+            font-size: 0.8em;
+            color: #6c757d;
+            font-style: italic;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        .class-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .class-description {
+            font-size: 0.85em;
+            color: #6c757d;
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        .class-section-content {
+            padding: 15px 20px;
+        }
+        
+        .section-header {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e9ecef;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .attribute, .method {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #495057;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            padding: 3px 0;
+        }
+        
+        .attribute.private { color: #dc3545; }
+        .attribute.protected { color: #fd7e14; }
+        .attribute.public { color: #28a745; }
+        
+        .method.private { color: #dc3545; }
+        .method.protected { color: #fd7e14; }
+        .method.public { color: #28a745; }
+        
+        .method.abstract { font-style: italic; }
+        .method.static { text-decoration: underline; }
+        
+        .visibility-symbol {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .type {
+            color: #6f42c1;
+            font-weight: 500;
+        }
+        
+        .parameter {
+            color: #0d6efd;
+        }
+        
+        .relationships {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .relationships h3 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .relationship-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .relationship-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .relationship-type {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+        
+        .relationship-desc {
+            font-size: 0.9em;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+        
+        .relationship-example {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            background: #e9ecef;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 8px;
+            color: #495057;
+        }
+        
+        .legend {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .legend h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .legend-category {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .legend-category h4 {
+            margin: 0 0 12px 0;
+            color: #3498db;
+            font-size: 1.1em;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .visibility-legend {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .visibility-legend h4 {
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
+        
+        .visibility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .visibility-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Library Book Loan System</h1>
+            <p class="subtitle">Class Diagram - Object-Oriented Design</p>
+        </div>
+        
+        <div class="diagram-container">
+            
+            <!-- Core Entity Classes -->
+            <div class="class-section">
+                <div class="section-title">🏛️ Core Entity Classes</div>
+                <div class="classes-grid">
+                    
+                    <!-- Member Class -->
+                    <div class="class-box entity">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Entity&gt;&gt;</div>
+                            <div class="class-name">Member</div>
+                            <div class="class-description">Represents a library member with borrowing privileges</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> id: <span class="type">Long</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> memberId: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> firstName: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> lastName: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> email: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> phone: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> address: <span class="type">Address</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> dateOfBirth: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> membershipType: <span class="type">MembershipType</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> membershipStartDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> membershipEndDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> status: <span class="type">MemberStatus</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> createdAt: <span class="type">LocalDateTime</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> isEligibleToBorrow(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> isMembershipExpired(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getFullName(): <span class="type">String</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> calculateMembershipDaysRemaining(): <span class="type">int</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> updateContactInformation(<span class="parameter">contactInfo: ContactInfo</span>): <span class="type">void</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Class -->
+                    <div class="class-box entity">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Entity&gt;&gt;</div>
+                            <div class="class-name">Book</div>
+                            <div class="class-description">Represents a book in the library catalog</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> id: <span class="type">Long</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> isbn: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> isbn13: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> title: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> subtitle: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> author: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> coAuthors: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> publisher: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> publicationDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> category: <span class="type">BookCategory</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> deweyDecimal: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> description: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> copies: <span class="type">List&lt;BookCopy&gt;</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> isAvailable(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getAvailableCopies(): <span class="type">List&lt;BookCopy&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getTotalCopies(): <span class="type">int</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getAvailableCopyCount(): <span class="type">int</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getNextAvailableDate(): <span class="type">LocalDate</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- BookCopy Class -->
+                    <div class="class-box entity">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Entity&gt;&gt;</div>
+                            <div class="class-name">BookCopy</div>
+                            <div class="class-description">Represents a physical copy of a book</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> id: <span class="type">Long</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> book: <span class="type">Book</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> copyNumber: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> barcode: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> condition: <span class="type">BookCondition</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> status: <span class="type">CopyStatus</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> locationCode: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> acquisitionDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> cost: <span class="type">BigDecimal</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> isAvailable(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> checkOut(): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> checkIn(): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> updateCondition(<span class="parameter">condition: BookCondition</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> updateLocation(<span class="parameter">locationCode: String</span>): <span class="type">void</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Loan Class -->
+                    <div class="class-box entity">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Entity&gt;&gt;</div>
+                            <div class="class-name">Loan</div>
+                            <div class="class-description">Represents a book loan transaction</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> id: <span class="type">Long</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> loanNumber: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> member: <span class="type">Member</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> bookCopy: <span class="type">BookCopy</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> loanDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> dueDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> returnDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> renewalCount: <span class="type">int</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> maxRenewals: <span class="type">int</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> status: <span class="type">LoanStatus</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> checkedOutBy: <span class="type">StaffUser</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> isOverdue(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getDaysOverdue(): <span class="type">int</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> canRenew(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> renew(): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> returnBook(<span class="parameter">returnDate: LocalDate</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> calculateOverdueFine(): <span class="type">BigDecimal</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Fine Class -->
+                    <div class="class-box entity">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Entity&gt;&gt;</div>
+                            <div class="class-name">Fine</div>
+                            <div class="class-description">Represents a financial penalty or fee</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> id: <span class="type">Long</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> member: <span class="type">Member</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> loan: <span class="type">Loan</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> fineType: <span class="type">FineType</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> amount: <span class="type">BigDecimal</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> description: <span class="type">String</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> fineDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> dueDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> status: <span class="type">FineStatus</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> paymentDate: <span class="type">LocalDate</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> isPaid(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> isOverdue(): <span class="type">boolean</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> markAsPaid(<span class="parameter">paymentDate: LocalDate</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> waive(<span class="parameter">reason: String, staff: StaffUser</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getDaysOverdue(): <span class="type">int</span></div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Service Classes -->
+            <div class="class-section">
+                <div class="section-title">⚙️ Service Classes</div>
+                <div class="classes-grid">
+                    
+                    <!-- LoanService Class -->
+                    <div class="class-box service">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Service&gt;&gt;</div>
+                            <div class="class-name">LoanService</div>
+                            <div class="class-description">Handles loan processing and management</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> loanRepository: <span class="type">LoanRepository</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> validationEngine: <span class="type">ValidationEngine</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> memberService: <span class="type">MemberService</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> inventoryService: <span class="type">InventoryService</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> fineService: <span class="type">FineService</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> processLoanRequest(<span class="parameter">request: LoanRequest</span>): <span class="type">LoanResult</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> validateLoanEligibility(<span class="parameter">memberId: String, bookId: String</span>): <span class="type">ValidationResult</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> issueLoan(<span class="parameter">member: Member, bookCopy: BookCopy</span>): <span class="type">Loan</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> returnBook(<span class="parameter">loanId: Long, returnDate: LocalDate</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> renewLoan(<span class="parameter">loanId: Long</span>): <span class="type">Loan</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getActiveLoans(<span class="parameter">memberId: String</span>): <span class="type">List&lt;Loan&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getOverdueLoans(): <span class="type">List&lt;Loan&gt;</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- ValidationEngine Class -->
+                    <div class="class-box service">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Service&gt;&gt;</div>
+                            <div class="class-name">ValidationEngine</div>
+                            <div class="class-description">Implements three-stage loan validation workflow</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> configurationService: <span class="type">ConfigurationService</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> businessRulesEngine: <span class="type">BusinessRulesEngine</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> validateBookAvailability(<span class="parameter">bookId: String</span>): <span class="type">ValidationStepResult</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> validateMemberEligibility(<span class="parameter">memberId: String</span>): <span class="type">ValidationStepResult</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> validateFineThreshold(<span class="parameter">memberId: String</span>): <span class="type">ValidationStepResult</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> performSequentialValidation(<span class="parameter">request: LoanRequest</span>): <span class="type">ValidationResult</span></div>
+                            <div class="method private"><span class="visibility-symbol">-</span> checkMembershipExpiry(<span class="parameter">member: Member</span>): <span class="type">boolean</span></div>
+                            <div class="method private"><span class="visibility-symbol">-</span> calculateOutstandingFines(<span class="parameter">memberId: String</span>): <span class="type">BigDecimal</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- MemberService Class -->
+                    <div class="class-box service">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Service&gt;&gt;</div>
+                            <div class="class-name">MemberService</div>
+                            <div class="class-description">Manages member accounts and validation</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> memberRepository: <span class="type">MemberRepository</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> membershipTypeRepository: <span class="type">MembershipTypeRepository</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> findByMemberId(<span class="parameter">memberId: String</span>): <span class="type">Member</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> validateMemberStatus(<span class="parameter">memberId: String</span>): <span class="type">MemberValidationResult</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> updateMemberInfo(<span class="parameter">memberId: String, info: MemberUpdateInfo</span>): <span class="type">Member</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> renewMembership(<span class="parameter">memberId: String, duration: int</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> suspendMember(<span class="parameter">memberId: String, reason: String</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getMemberAccountSummary(<span class="parameter">memberId: String</span>): <span class="type">MemberAccountSummary</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- InventoryService Class -->
+                    <div class="class-box service">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Service&gt;&gt;</div>
+                            <div class="class-name">InventoryService</div>
+                            <div class="class-description">Manages book catalog and availability</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> bookRepository: <span class="type">BookRepository</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> bookCopyRepository: <span class="type">BookCopyRepository</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> searchEngine: <span class="type">SearchEngine</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> checkBookAvailability(<span class="parameter">bookId: String</span>): <span class="type">BookAvailability</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> findAvailableCopy(<span class="parameter">bookId: String</span>): <span class="type">BookCopy</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> searchBooks(<span class="parameter">criteria: SearchCriteria</span>): <span class="type">List&lt;Book&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> updateCopyStatus(<span class="parameter">copyId: Long, status: CopyStatus</span>): <span class="type">void</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getBookDetails(<span class="parameter">bookId: String</span>): <span class="type">BookDetails</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- FineService Class -->
+                    <div class="class-box service">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Service&gt;&gt;</div>
+                            <div class="class-name">FineService</div>
+                            <div class="class-description">Handles fine calculations and payments</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> fineRepository: <span class="type">FineRepository</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> paymentService: <span class="type">PaymentService</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> configurationService: <span class="type">ConfigurationService</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> calculateOutstandingFines(<span class="parameter">memberId: String</span>): <span class="type">BigDecimal</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> generateOverdueFine(<span class="parameter">loan: Loan</span>): <span class="type">Fine</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> processPayment(<span class="parameter">memberId: String, amount: BigDecimal</span>): <span class="type">PaymentResult</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getMemberFines(<span class="parameter">memberId: String</span>): <span class="type">List&lt;Fine&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> checkFineThreshold(<span class="parameter">memberId: String</span>): <span class="type">boolean</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Controller Classes -->
+            <div class="class-section">
+                <div class="section-title">🎮 Controller Classes</div>
+                <div class="classes-grid">
+                    
+                    <!-- LoanController Class -->
+                    <div class="class-box controller">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Controller&gt;&gt;</div>
+                            <div class="class-name">LoanController</div>
+                            <div class="class-description">REST API controller for loan operations</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> loanService: <span class="type">LoanService</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> loanMapper: <span class="type">LoanMapper</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> processLoan(<span class="parameter">@RequestBody loanRequest: LoanRequestDto</span>): <span class="type">ResponseEntity&lt;LoanResponseDto&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getLoanDetails(<span class="parameter">@PathVariable loanId: Long</span>): <span class="type">ResponseEntity&lt;LoanDto&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> returnBook(<span class="parameter">@PathVariable loanId: Long, @RequestBody returnRequest: ReturnRequestDto</span>): <span class="type">ResponseEntity&lt;Void&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> renewLoan(<span class="parameter">@PathVariable loanId: Long</span>): <span class="type">ResponseEntity&lt;LoanDto&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getLoans(<span class="parameter">@RequestParam params: LoanSearchParams</span>): <span class="type">ResponseEntity&lt;PagedResponse&lt;LoanDto&gt;&gt;</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- MemberController Class -->
+                    <div class="class-box controller">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Controller&gt;&gt;</div>
+                            <div class="class-name">MemberController</div>
+                            <div class="class-description">REST API controller for member operations</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> memberService: <span class="type">MemberService</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> memberMapper: <span class="type">MemberMapper</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> validateMember(<span class="parameter">@PathVariable memberId: String</span>): <span class="type">ResponseEntity&lt;MemberValidationDto&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getMemberAccount(<span class="parameter">@PathVariable memberId: String</span>): <span class="type">ResponseEntity&lt;MemberAccountDto&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> updateMember(<span class="parameter">@PathVariable memberId: String, @RequestBody updateRequest: MemberUpdateDto</span>): <span class="type">ResponseEntity&lt;MemberDto&gt;</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- InventoryController Class -->
+                    <div class="class-box controller">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Controller&gt;&gt;</div>
+                            <div class="class-name">InventoryController</div>
+                            <div class="class-description">REST API controller for inventory operations</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> inventoryService: <span class="type">InventoryService</span></div>
+                            <div class="attribute private"><span class="visibility-symbol">-</span> bookMapper: <span class="type">BookMapper</span></div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public"><span class="visibility-symbol">+</span> checkAvailability(<span class="parameter">@PathVariable bookId: String</span>): <span class="type">ResponseEntity&lt;BookAvailabilityDto&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> searchBooks(<span class="parameter">@RequestParam searchParams: BookSearchParams</span>): <span class="type">ResponseEntity&lt;PagedResponse&lt;BookDto&gt;&gt;</span></div>
+                            <div class="method public"><span class="visibility-symbol">+</span> getBookDetails(<span class="parameter">@PathVariable bookId: String</span>): <span class="type">ResponseEntity&lt;BookDetailsDto&gt;</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Repository Classes -->
+            <div class="class-section">
+                <div class="section-title">🗄️ Repository Classes</div>
+                <div class="classes-grid">
+                    
+                    <!-- LoanRepository Interface -->
+                    <div class="class-box repository">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Repository&gt;&gt;</div>
+                            <div class="class-name">LoanRepository</div>
+                            <div class="class-description">Data access interface for loan entities</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findById(<span class="parameter">id: Long</span>): <span class="type">Optional&lt;Loan&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByMemberId(<span class="parameter">memberId: String</span>): <span class="type">List&lt;Loan&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findActiveLoans(<span class="parameter">memberId: String</span>): <span class="type">List&lt;Loan&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findOverdueLoans(): <span class="type">List&lt;Loan&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByBookCopyId(<span class="parameter">copyId: Long</span>): <span class="type">Optional&lt;Loan&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> save(<span class="parameter">loan: Loan</span>): <span class="type">Loan</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> generateLoanNumber(): <span class="type">String</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- MemberRepository Interface -->
+                    <div class="class-box repository">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Repository&gt;&gt;</div>
+                            <div class="class-name">MemberRepository</div>
+                            <div class="class-description">Data access interface for member entities</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByMemberId(<span class="parameter">memberId: String</span>): <span class="type">Optional&lt;Member&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByEmail(<span class="parameter">email: String</span>): <span class="type">Optional&lt;Member&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findActiveMembers(): <span class="type">List&lt;Member&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findExpiredMemberships(): <span class="type">List&lt;Member&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> save(<span class="parameter">member: Member</span>): <span class="type">Member</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- BookRepository Interface -->
+                    <div class="class-box repository">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Repository&gt;&gt;</div>
+                            <div class="class-name">BookRepository</div>
+                            <div class="class-description">Data access interface for book entities</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Methods</div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByIsbn(<span class="parameter">isbn: String</span>): <span class="type">Optional&lt;Book&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByTitle(<span class="parameter">title: String</span>): <span class="type">List&lt;Book&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByAuthor(<span class="parameter">author: String</span>): <span class="type">List&lt;Book&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> findByCategory(<span class="parameter">categoryId: Long</span>): <span class="type">List&lt;Book&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> searchBooks(<span class="parameter">criteria: SearchCriteria</span>): <span class="type">Page&lt;Book&gt;</span></div>
+                            <div class="method public abstract"><span class="visibility-symbol">+</span> save(<span class="parameter">book: Book</span>): <span class="type">Book</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- DTO Classes -->
+            <div class="class-section">
+                <div class="section-title">📦 Data Transfer Objects (DTOs)</div>
+                <div class="classes-grid">
+                    
+                    <!-- LoanRequestDto -->
+                    <div class="class-box dto">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;DTO&gt;&gt;</div>
+                            <div class="class-name">LoanRequestDto</div>
+                            <div class="class-description">Request data for creating a new loan</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> memberId: <span class="type">String</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> bookIdentifier: <span class="type">String</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> bookIdentifierType: <span class="type">BookIdentifierType</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> notes: <span class="type">String</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- LoanResponseDto -->
+                    <div class="class-box dto">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;DTO&gt;&gt;</div>
+                            <div class="class-name">LoanResponseDto</div>
+                            <div class="class-description">Response data for loan operations</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> loanId: <span class="type">Long</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> loanNumber: <span class="type">String</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> member: <span class="type">MemberSummaryDto</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> book: <span class="type">BookSummaryDto</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> loanDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> dueDate: <span class="type">LocalDate</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> status: <span class="type">LoanStatus</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> validationResults: <span class="type">ValidationResultDto</span></div>
+                        </div>
+                    </div>
+                    
+                    <!-- ValidationResultDto -->
+                    <div class="class-box dto">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;DTO&gt;&gt;</div>
+                            <div class="class-name">ValidationResultDto</div>
+                            <div class="class-description">Result of loan validation process</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Attributes</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> bookAvailable: <span class="type">boolean</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> memberValid: <span class="type">boolean</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> finesAcceptable: <span class="type">boolean</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> canBorrow: <span class="type">boolean</span></div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> validationErrors: <span class="type">List&lt;ValidationErrorDto&gt;</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enum Classes -->
+            <div class="class-section">
+                <div class="section-title">🏷️ Enumeration Classes</div>
+                <div class="classes-grid">
+                    
+                    <!-- MemberStatus Enum -->
+                    <div class="class-box enum">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Enumeration&gt;&gt;</div>
+                            <div class="class-name">MemberStatus</div>
+                            <div class="class-description">Status values for member accounts</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Values</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> ACTIVE</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> EXPIRED</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> SUSPENDED</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> CANCELLED</div>
+                        </div>
+                    </div>
+                    
+                    <!-- LoanStatus Enum -->
+                    <div class="class-box enum">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Enumeration&gt;&gt;</div>
+                            <div class="class-name">LoanStatus</div>
+                            <div class="class-description">Status values for loan transactions</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Values</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> ACTIVE</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> RETURNED</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> OVERDUE</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> LOST</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> RENEWED</div>
+                        </div>
+                    </div>
+                    
+                    <!-- CopyStatus Enum -->
+                    <div class="class-box enum">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Enumeration&gt;&gt;</div>
+                            <div class="class-name">CopyStatus</div>
+                            <div class="class-description">Status values for book copies</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Values</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> AVAILABLE</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> CHECKED_OUT</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> RESERVED</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> IN_REPAIR</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> LOST</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> WITHDRAWN</div>
+                        </div>
+                    </div>
+                    
+                    <!-- FineStatus Enum -->
+                    <div class="class-box enum">
+                        <div class="class-header">
+                            <div class="class-stereotype">&lt;&lt;Enumeration&gt;&gt;</div>
+                            <div class="class-name">FineStatus</div>
+                            <div class="class-description">Status values for fines</div>
+                        </div>
+                        <div class="class-section-content">
+                            <div class="section-header">Values</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> UNPAID</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> PAID</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> WAIVED</div>
+                            <div class="attribute public"><span class="visibility-symbol">+</span> PARTIALLY_PAID</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Class Relationships -->
+        <div class="relationships">
+            <h3>🔗 Class Relationships</h3>
+            <div class="relationship-grid">
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Association</div>
+                    <div class="relationship-desc">Member has multiple Loans (one-to-many)</div>
+                    <div class="relationship-example">Member [1] ────── [0..*] Loan</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Association</div>
+                    <div class="relationship-desc">Book has multiple BookCopies (one-to-many)</div>
+                    <div class="relationship-example">Book [1] ────── [1..*] BookCopy</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Association</div>
+                    <div class="relationship-desc">Loan references one BookCopy (many-to-one)</div>
+                    <div class="relationship-example">Loan [0..*] ────── [1] BookCopy</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Association</div>
+                    <div class="relationship-desc">Member has multiple Fines (one-to-many)</div>
+                    <div class="relationship-example">Member [1] ────── [0..*] Fine</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Association</div>
+                    <div class="relationship-desc">Loan may have multiple Fines (one-to-many)</div>
+                    <div class="relationship-example">Loan [0..1] ────── [0..*] Fine</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Dependency</div>
+                    <div class="relationship-desc">LoanService depends on ValidationEngine</div>
+                    <div class="relationship-example">LoanService ┄┄┄┄▷ ValidationEngine</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Dependency</div>
+                    <div class="relationship-desc">Controllers depend on Services</div>
+                    <div class="relationship-example">LoanController ┄┄┄┄▷ LoanService</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Dependency</div>
+                    <div class="relationship-desc">Services depend on Repositories</div>
+                    <div class="relationship-example">MemberService ┄┄┄┄▷ MemberRepository</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Composition</div>
+                    <div class="relationship-desc">Member contains Address (strong ownership)</div>
+                    <div class="relationship-example">Member ◆────── Address</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Aggregation</div>
+                    <div class="relationship-desc">Book contains Category reference (weak ownership)</div>
+                    <div class="relationship-example">Book ◇────── BookCategory</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Realization</div>
+                    <div class="relationship-desc">Repository implementations realize interfaces</div>
+                    <div class="relationship-example">LoanRepositoryImpl ┄┄┄┄△ LoanRepository</div>
+                </div>
+                
+                <div class="relationship-item">
+                    <div class="relationship-type">Inheritance</div>
+                    <div class="relationship-desc">Specialized fine types extend base Fine class</div>
+                    <div class="relationship-example">OverdueFine ────△ Fine</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visibility and Access Modifiers Legend -->
+        <div class="visibility-legend">
+            <h4>🔐 Visibility Modifiers</h4>
+            <div class="visibility-grid">
+                <div class="visibility-item">
+                    <span class="visibility-symbol" style="color: #28a745;">+</span>
+                    <span>public</span>
+                </div>
+                <div class="visibility-item">
+                    <span class="visibility-symbol" style="color: #fd7e14;">#</span>
+                    <span>protected</span>
+                </div>
+                <div class="visibility-item">
+                    <span class="visibility-symbol" style="color: #dc3545;">-</span>
+                    <span>private</span>
+                </div>
+                <div class="visibility-item">
+                    <span class="visibility-symbol" style="color: #6c757d;">~</span>
+                    <span>package</span>
+                </div>
+                <div class="visibility-item">
+                    <span style="text-decoration: underline;">underlined</span>
+                    <span>static</span>
+                </div>
+                <div class="visibility-item">
+                    <span style="font-style: italic;">italicized</span>
+                    <span>abstract</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Design Patterns and Architectural Principles -->
+        <div class="tech-details">
+            <h3>🏗️ Design Patterns & Architectural Principles</h3>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h4>Design Patterns Used</h4>
+                    <ul class="tech-list">
+                        <li><strong>Repository Pattern</strong> - Data access abstraction</li>
+                        <li><strong>Service Layer Pattern</strong> - Business logic encapsulation</li>
+                        <li><strong>DTO Pattern</strong> - Data transfer objects for API</li>
+                        <li><strong>Strategy Pattern</strong> - Validation strategies</li>
+                        <li><strong>Factory Pattern</strong> - Object creation</li>
+                        <li><strong>Observer Pattern</strong> - Event notifications</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>SOLID Principles</h4>
+                    <ul class="tech-list">
+                        <li><strong>Single Responsibility</strong> - Each class has one reason to change</li>
+                        <li><strong>Open/Closed</strong> - Open for extension, closed for modification</li>
+                        <li><strong>Liskov Substitution</strong> - Objects replaceable with instances of subtypes</li>
+                        <li><strong>Interface Segregation</strong> - Many specific interfaces vs one general</li>
+                        <li><strong>Dependency Inversion</strong> - Depend on abstractions, not concretions</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Architectural Layers</h4>
+                    <ul class="tech-list">
+                        <li><strong>Presentation Layer</strong> - Controllers, DTOs</li>
+                        <li><strong>Business Layer</strong> - Services, Domain Logic</li>
+                        <li><strong>Persistence Layer</strong> - Repositories, Entities</li>
+                        <li><strong>Domain Layer</strong> - Core business entities</li>
+                        <li><strong>Infrastructure</strong> - External integrations</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Quality Attributes</h4>
+                    <ul class="tech-list">
+                        <li><strong>Maintainability</strong> - Clear separation of concerns</li>
+                        <li><strong>Testability</strong> - Dependency injection ready</li>
+                        <li><strong>Scalability</strong> - Stateless service design</li>
+                        <li><strong>Flexibility</strong> - Strategy and factory patterns</li>
+                        <li><strong>Reusability</strong> - Generic interfaces and DTOs</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Key Class Interactions -->
+        <div class="tech-details">
+            <h3>🔄 Key Class Interaction Scenarios</h3>
+            <div class="flow-grid">
+                <div class="flow-item">
+                    <div class="flow-title">Loan Processing Flow</div>
+                    <div class="flow-description">
+                        How classes interact during the loan request process through the three-stage validation.
+                    </div>
+                    <div class="flow-path">
+                        LoanController → LoanService → ValidationEngine → 
+                        [InventoryService + MemberService + FineService] → 
+                        LoanRepository → Loan Entity
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Member Validation</div>
+                    <div class="flow-description">
+                        Class collaboration for comprehensive member eligibility checking.
+                    </div>
+                    <div class="flow-path">
+                        ValidationEngine → MemberService → MemberRepository → 
+                        Member Entity → [checkEligibility() + isMembershipExpired()]
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Fine Calculation</div>
+                    <div class="flow-description">
+                        How fine calculations are performed across multiple classes.
+                    </div>
+                    <div class="flow-path">
+                        FineService → FineRepository → Fine Entity → 
+                        Loan Entity → [calculateOverdueFine() + getDaysOverdue()]
+                    </div>
+                </div>
+                
+                <div class="flow-item">
+                    <div class="flow-title">Book Availability Check</div>
+                    <div class="flow-description">
+                        Real-time availability verification through entity relationships.
+                    </div>
+                    <div class="flow-path">
+                        InventoryService → BookRepository → Book Entity → 
+                        BookCopy Collection → [isAvailable() + getAvailableCopies()]
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Class Diagram Legend -->
+        <div class="legend">
+            <h3>🎯 Class Type Legend</h3>
+            <div class="legend-grid">
+                <div class="legend-category">
+                    <h4>Entity Classes</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3498db;"></div>
+                        <span>Core domain objects representing business concepts</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Service Classes</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e74c3c;"></div>
+                        <span>Business logic and application services</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Controller Classes</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f39c12;"></div>
+                        <span>REST API controllers and presentation logic</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Repository Classes</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #27ae60;"></div>
+                        <span>Data access layer and persistence interfaces</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>DTO Classes</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9b59b6;"></div>
+                        <span>Data transfer objects for API communication</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Enum Classes</h4>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #95a5a6;"></div>
+                        <span>Enumeration types for constants and status values</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Implementation Notes -->
+        <div class="tech-details">
+            <h3>📝 Implementation Notes</h3>
+            <div class="tech-grid">
+                <div class="tech-category">
+                    <h4>Entity Design</h4>
+                    <ul class="tech-list">
+                        <li>JPA annotations for persistence mapping</li>
+                        <li>Hibernate validation constraints</li>
+                        <li>Audit fields (created/updated timestamps)</li>
+                        <li>Optimistic locking with version fields</li>
+                        <li>Soft delete support for business entities</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Service Implementation</h4>
+                    <ul class="tech-list">
+                        <li>Spring @Service and @Transactional annotations</li>
+                        <li>Dependency injection via constructor</li>
+                        <li>Exception handling with custom exceptions</li>
+                        <li>Logging with SLF4J and structured logging</li>
+                        <li>Metrics collection for monitoring</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Controller Design</h4>
+                    <ul class="tech-list">
+                        <li>Spring @RestController with OpenAPI annotations</li>
+                        <li>Request/response validation</li>
+                        <li>HTTP status code mapping</li>
+                        <li>Content negotiation support</li>
+                        <li>CORS and security headers</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category">
+                    <h4>Repository Pattern</h4>
+                    <ul class="tech-list">
+                        <li>Spring Data JPA repositories</li>
+                        <li>Custom query methods with @Query</li>
+                        <li>Specification pattern for dynamic queries</li>
+                        <li>Pagination and sorting support</li>
+                        <li>Database-specific optimizations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

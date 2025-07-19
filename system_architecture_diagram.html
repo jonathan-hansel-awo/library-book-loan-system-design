@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Book Loan System - Architecture Diagram</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .architecture-container {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        
+        .layer {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .layer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .presentation-layer { border-left-color: #3498db; }
+        .application-layer { border-left-color: #e74c3c; }
+        .business-layer { border-left-color: #f39c12; }
+        .data-layer { border-left-color: #27ae60; }
+        .integration-layer { border-left-color: #9b59b6; }
+        
+        .layer-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .layer-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+        }
+        
+        .presentation-layer .layer-icon { background: #3498db; }
+        .application-layer .layer-icon { background: #e74c3c; }
+        .business-layer .layer-icon { background: #f39c12; }
+        .data-layer .layer-icon { background: #27ae60; }
+        .integration-layer .layer-icon { background: #9b59b6; }
+        
+        .components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .component {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .component::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .component:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .component:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+        }
+        
+        .component-title {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .component-desc {
+            color: #6c757d;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .data-flow {
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .flow-arrow {
+            font-size: 2em;
+            color: #667eea;
+            margin: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .legend {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 12px;
+        }
+        
+        .legend h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .tech-stack {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .tech-stack h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        
+        .tech-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .tech-category {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .tech-category h4 {
+            margin: 0 0 15px 0;
+            color: #3498db;
+        }
+        
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tech-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .tech-list li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Library Book Loan System</h1>
+            <p class="subtitle">System Architecture Diagram</p>
+        </div>
+        
+        <div class="architecture-container">
+            <!-- Presentation Layer -->
+            <div class="layer presentation-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">🖥️</div>
+                    Presentation Layer
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">
+                            <span>👨‍💼</span>
+                            Staff Web Interface
+                        </div>
+                        <div class="component-desc">
+                            React-based web application for library staff to process loans, manage inventory, and handle member accounts
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>👤</span>
+                            Member Self-Service Portal
+                        </div>
+                        <div class="component-desc">
+                            Web portal for members to check account status, view loans, pay fines, and manage their library profile
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📱</span>
+                            Mobile Application
+                        </div>
+                        <div class="component-desc">
+                            Native mobile apps for iOS/Android providing member self-service capabilities and staff functions
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>⚙️</span>
+                            Admin Dashboard
+                        </div>
+                        <div class="component-desc">
+                            Administrative interface for system configuration, user management, and system monitoring
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <div class="flow-arrow">⬇️</div>
+            </div>
+            
+            <!-- Application Layer -->
+            <div class="layer application-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">🔧</div>
+                    Application Layer
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">
+                            <span>🌐</span>
+                            API Gateway
+                        </div>
+                        <div class="component-desc">
+                            Central entry point for all API requests, handling routing, authentication, rate limiting, and load balancing
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>🔐</span>
+                            Authentication Service
+                        </div>
+                        <div class="component-desc">
+                            JWT-based authentication and authorization service with role-based access control for staff and members
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📊</span>
+                            Loan Processing Service
+                        </div>
+                        <div class="component-desc">
+                            Core microservice handling loan requests, validation workflow, and loan lifecycle management
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📚</span>
+                            Inventory Management Service
+                        </div>
+                        <div class="component-desc">
+                            Manages book catalog, availability status, copy tracking, and real-time inventory updates
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>👥</span>
+                            Member Management Service
+                        </div>
+                        <div class="component-desc">
+                            Handles member profiles, membership validation, account status, and borrowing history
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>💰</span>
+                            Fine Management Service
+                        </div>
+                        <div class="component-desc">
+                            Calculates fines, processes payments, maintains fine history, and integrates with payment gateways
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <div class="flow-arrow">⬇️</div>
+            </div>
+            
+            <!-- Business Layer -->
+            <div class="layer business-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">⚡</div>
+                    Business Logic Layer
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">
+                            <span>✅</span>
+                            Validation Engine
+                        </div>
+                        <div class="component-desc">
+                            Sequential validation logic for book availability, membership status, and fine threshold checks
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>🔄</span>
+                            Workflow Orchestrator
+                        </div>
+                        <div class="component-desc">
+                            Manages the three-stage validation workflow and coordinates between different services
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📐</span>
+                            Business Rules Engine
+                        </div>
+                        <div class="component-desc">
+                            Configurable rules engine for fine thresholds, loan periods, membership policies, and validation criteria
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>🔔</span>
+                            Notification Engine
+                        </div>
+                        <div class="component-desc">
+                            Handles email, SMS, and in-app notifications for loan confirmations, due dates, and system alerts
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📈</span>
+                            Analytics Engine
+                        </div>
+                        <div class="component-desc">
+                            Processes loan data for reporting, generates statistics, and provides insights on library usage patterns
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>🔄</span>
+                            State Management
+                        </div>
+                        <div class="component-desc">
+                            Manages book states, loan states, and member states throughout the system lifecycle
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <div class="flow-arrow">⬇️</div>
+            </div>
+            
+            <!-- Data Layer -->
+            <div class="layer data-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">🗄️</div>
+                    Data Persistence Layer
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📊</span>
+                            Primary Database (PostgreSQL)
+                        </div>
+                        <div class="component-desc">
+                            Main relational database storing books, members, loans, fines, and transactional data with ACID compliance
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>⚡</span>
+                            Cache Layer (Redis)
+                        </div>
+                        <div class="component-desc">
+                            High-performance caching for frequently accessed data like book availability and member sessions
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📋</span>
+                            Read Replicas
+                        </div>
+                        <div class="component-desc">
+                            Read-only database replicas for improved query performance and reporting without impacting main database
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📄</span>
+                            Document Store (MongoDB)
+                        </div>
+                        <div class="component-desc">
+                            Stores unstructured data like system logs, audit trails, and configuration documents
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>💾</span>
+                            Backup & Archive
+                        </div>
+                        <div class="component-desc">
+                            Automated backup systems with point-in-time recovery and long-term data archival
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>🔍</span>
+                            Search Engine (Elasticsearch)
+                        </div>
+                        <div class="component-desc">
+                            Full-text search capabilities for book catalog, advanced search filters, and analytics
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="data-flow">
+                <div class="flow-arrow">⬇️</div>
+            </div>
+            
+            <!-- Integration Layer -->
+            <div class="layer integration-layer">
+                <div class="layer-title">
+                    <div class="layer-icon">🔌</div>
+                    Integration & External Services
+                </div>
+                <div class="components">
+                    <div class="component">
+                        <div class="component-title">
+                            <span>💳</span>
+                            Payment Gateway
+                        </div>
+                        <div class="component-desc">
+                            Integration with Stripe/PayPal for processing fine payments, handling refunds, and payment notifications
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📚</span>
+                            Library Management System
+                        </div>
+                        <div class="component-desc">
+                            Integration with existing library systems (ILS) for data synchronization and legacy system support
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📧</span>
+                            Email Service (SendGrid)
+                        </div>
+                        <div class="component-desc">
+                            Email delivery service for notifications, receipts, due date reminders, and system communications
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📱</span>
+                            SMS Service (Twilio)
+                        </div>
+                        <div class="component-desc">
+                            SMS notifications for urgent communications, due date alerts, and two-factor authentication
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>📊</span>
+                            Analytics Platform
+                        </div>
+                        <div class="component-desc">
+                            Integration with business intelligence tools for advanced reporting and data visualization
+                        </div>
+                    </div>
+                    <div class="component">
+                        <div class="component-title">
+                            <span>🔐</span>
+                            Identity Provider
+                        </div>
+                        <div class="component-desc">
+                            LDAP/Active Directory integration for staff authentication and single sign-on capabilities
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <h3>🎯 Architecture Principles</h3>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3498db;"></div>
+                        <span>User Interface Components</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e74c3c;"></div>
+                        <span>Application Services</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f39c12;"></div>
+                        <span>Business Logic Components</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #27ae60;"></div>
+                        <span>Data Storage Systems</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9b59b6;"></div>
+                        <span>External Integrations</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Technology Stack -->
+            <div class="tech-stack">
+                <h3>🛠️ Recommended Technology Stack</h3>
+                <div class="tech-categories">
+                    <div class="tech-category">
+                        <h4>Frontend</h4>
+                        <ul class="tech-list">
+                            <li>React.js with TypeScript</li>
+                            <li>Material-UI / Ant Design</li>
+                            <li>Redux for state management</li>
+                            <li>Axios for API calls</li>
+                            <li>React Native (Mobile)</li>
+                        </ul>
+                    </div>
+                    <div class="tech-category">
+                        <h4>Backend</h4>
+                        <ul class="tech-list">
+                            <li>Node.js with Express</li>
+                            <li>TypeScript</li>
+                            <li>Microservices architecture</li>
+                            <li>Docker containers</li>
+                            <li>Kubernetes orchestration</li>
+                        </ul>
+                    </div>
+                    <div class="tech-category">
+                        <h4>Database</h4>
+                        <ul class="tech-list">
+                            <li>PostgreSQL (Primary)</li>
+                            <li>Redis (Caching)</li>
+                            <li>MongoDB (Documents)</li>
+                            <li>Elasticsearch (Search)</li>
+                            <li>Database migration tools</li>
+                        </ul>
+                    </div>
+                    <div class="tech-category">
+                        <h4>Infrastructure</h4>
+                        <ul class="tech-list">
+                            <li>AWS/Azure/GCP</li>
+                            <li>NGINX (Load balancer)</li>
+                            <li>Jenkins/GitLab CI</li>
+                            <li>Monitoring (Prometheus)</li>
+                            <li>Logging (ELK Stack)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

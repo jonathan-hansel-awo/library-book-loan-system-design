@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Book Loan System - State Diagram</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            margin: 10px 0 0 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .diagram-container {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        
+        .state-machine {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .machine-title {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .states-container {
+            position: relative;
+            min-height: 400px;
+            padding: 20px;
+        }
+        
+        .state {
+            position: absolute;
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 25px;
+            padding: 15px 20px;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .state:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            border-color: #5a67d8;
+        }
+        
+        .state.initial {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            border-color: #4ecdc4;
+        }
+        
+        .state.final {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            border-color: #ff6b6b;
+        }
+        
+        .state.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-color: #4facfe;
+        }
+        
+        .state.error {
+            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+            color: white;
+            border-color: #fc466b;
+        }
+        
+        .state.warning {
+            background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+            color: white;
+            border-color: #fdbb2d;
+        }
+        
+        .state-name {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+        
+        .state-description {
+            font-size: 0.8em;
+            opacity: 0.9;
+            line-height: 1.3;
+        }
+        
+        .transition {
+            position: absolute;
+            z-index: 10;
+        }
+        
+        .transition-line {
+            stroke: #495057;
+            stroke-width: 2;
+            fill: none;
+            marker-end: url(#arrowhead);
+        }
+        
+        .transition-line.dashed {
+            stroke-dasharray: 5,5;
+            stroke: #6c757d;
+        }
+        
+        .transition-label {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 0.8em;
+            color: #495057;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        
+        .transition-label.guard {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+        
+        .transition-label.event {
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        
+        .start-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #2c3e50;
+            border-radius: 50%;
+            z-index: 15;
+        }
+        
+        .end-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #2c3e50;
+            border-radius: 50%;
+            background: white;
+            z-index: 15;
+        }
+        
+        .end-marker::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 8px;
+            height: 8px;
+            background: #2c3e50;
+            border-radius: 50%;
+        }
+        
+        .composite-state {
+            border: 3px dashed #9b59b6;
+            border-radius: 15px;
+            background: rgba(155, 89, 182, 0.1);
+            padding: 20px;
+            position: absolute;
+        }
+        
+        .composite-title {
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background: #9b59b6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .legend {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .legend h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .legend-category {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .legend-category h4 {
+            margin: 0 0 12px 0;
+            color: #3498db;
+            font-size: 1.1em;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .state-sample {
+            width: 30px;
+            height: 20px;
+            border-radius: 10px;
+            border: 2px solid;
+        }
+        
+        .state-sample.initial {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            border-color: #4ecdc4;
+        }
+        
+        .state-sample.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-color: #4facfe;
+        }
+        
+        .state-sample.final {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            border-color: #ff6b6b;
+        }
+        
+        .state-sample.error {
+            background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+            border-color: #fc466b;
+        }
+        
+        .state-sample.warning {
+            background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+            border-color: #fdbb2d;
+        }
+        
+        .state-sample.normal {
+            background: white;
+            border-color: #667eea;
+        }
+        
+        .transition-tables {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .transition-tables h3 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+        
+        .transition-table {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .table-content {
+            background: #f8f9fa;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 10px;
+            padding: 8px 15px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.9em;
+            align-items: center;
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-row:nth-child(even) {
+            background: white;
+        }
+        
+        .from-state, .to-state {
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .trigger {
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.8em;
+        }
+        
+        .guard-conditions {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .guard-conditions h3 {
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .guard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .guard-item {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        
+        .guard-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .guard-desc {
+            color: #6c757d;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .guard-example {
+            margin-top: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            background: #e9ecef;
+            padding: 6px 8px;
+            border-radius: 4px;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Library Book Loan System</h1>
+            <p class="subtitle">State Diagram - Entity Lifecycle Management</p>
+        </div>
+        
+        <div class="diagram-container">
+            
+            <!-- Book Copy State Machine -->
+            <div class="state-machine">
+                <div class="machine-title">📚 Book Copy State Machine</div>
+                <div class="states-container" style="height: 450px;">
+                    
+                    <!-- Start Marker -->
+                    <div class="start-marker" style="top: 20px; left: 50px;"></div>
+                    
+                    <!-- States -->
+                    <div class="state initial" style="top: 10px; left: 120px;">
+                        <div class="state-name">AVAILABLE</div>
+                        <div class="state-description">Ready for checkout<br/>on library shelf</div>
+                    </div>
+                    
+                    <div class="state active" style="top: 10px; right: 120px;">
+                        <div class="state-name">CHECKED_OUT</div>
+                        <div class="state-description">Currently borrowed<br/>by a member</div>
+                    </div>
+                    
+                    <div class="state warning" style="top: 150px; left: 50px;">
+                        <div class="state-name">RESERVED</div>
+                        <div class="state-description">Held for specific<br/>member request</div>
+                    </div>
+                    
+                    <div class="state error" style="top: 150px; right: 50px;">
+                        <div class="state-name">OVERDUE</div>
+                        <div class="state-description">Past due date<br/>fines accruing</div>
+                    </div>
+                    
+                    <div class="state" style="top: 290px; left: 120px;">
+                        <div class="state-name">IN_REPAIR</div>
+                        <div class="state-description">Being repaired<br/>temporarily unavailable</div>
+                    </div>
+                    
+                    <div class="state" style="top: 290px; right: 120px;">
+                        <div class="state-name">LOST</div>
+                        <div class="state-description">Lost by member<br/>replacement required</div>
+                    </div>
+                    
+                    <div class="state final" style="bottom: 20px; left: 50%; transform: translateX(-50%);">
+                        <div class="state-name">WITHDRAWN</div>
+                        <div class="state-description">Permanently removed<br/>from circulation</div>
+                    </div>
+                    
+                    <!-- SVG for transitions -->
+                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+                                    refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#495057" />
+                            </marker>
+                        </defs>
+                        
+                        <!-- Transitions -->
+                        <!-- Start to AVAILABLE -->
+                        <path class="transition-line" d="M 70 30 L 120 30" />
+                        
+                        <!-- AVAILABLE to CHECKED_OUT -->
+                        <path class="transition-line" d="M 250 30 L 490 30" />
+                        
+                        <!-- CHECKED_OUT to AVAILABLE -->
+                        <path class="transition-line" d="M 490 50 L 250 50" />
+                        
+                        <!-- AVAILABLE to RESERVED -->
+                        <path class="transition-line" d="M 170 60 L 120 150" />
+                        
+                        <!-- RESERVED to CHECKED_OUT -->
+                        <path class="transition-line" d="M 180 160 L 490 60" />
+                        
+                        <!-- CHECKED_OUT to OVERDUE -->
+                        <path class="transition-line" d="M 540 60 L 580 150" />
+                        
+                        <!-- OVERDUE to AVAILABLE -->
+                        <path class="transition-line" d="M 580 180 L 250 60" />
+                        
+                        <!-- AVAILABLE to IN_REPAIR -->
+                        <path class="transition-line" d="M 170 60 L 170 290" />
+                        
+                        <!-- IN_REPAIR to AVAILABLE -->
+                        <path class="transition-line" d="M 190 290 L 190 60" />
+                        
+                        <!-- OVERDUE to LOST -->
+                        <path class="transition-line" d="M 600 180 L 600 290" />
+                        
+                        <!-- Any state to WITHDRAWN -->
+                        <path class="transition-line dashed" d="M 170 320 L 350 360" />
+                        <path class="transition-line dashed" d="M 570 320 L 420 360" />
+                    </svg>
+                    
+                    <!-- Transition Labels -->
+                    <div class="transition-label event" style="top: 15px; left: 320px;">checkout</div>
+                    <div class="transition-label event" style="top: 65px; left: 320px;">return</div>
+                    <div class="transition-label event" style="top: 100px; left: 100px;">reserve</div>
+                    <div class="transition-label guard" style="top: 100px; right: 200px;">due date passed</div>
+                    <div class="transition-label event" style="top: 200px; right: 250px;">payment made</div>
+                    <div class="transition-label event" style="top: 200px; left: 120px;">damage reported</div>
+                    <div class="transition-label event" style="top: 240px; left: 140px;">repair completed</div>
+                    <div class="transition-label guard" style="top: 230px; right: 100px;">[30 days overdue]</div>
+                    <div class="transition-label event" style="bottom: 80px; left: 200px;">admin action</div>
+                </div>
+            </div>
+            
+            <!-- Loan State Machine -->
+            <div class="state-machine">
+                <div class="machine-title">📋 Loan State Machine</div>
+                <div class="states-container" style="height: 350px;">
+                    
+                    <!-- Start Marker -->
+                    <div class="start-marker" style="top: 20px; left: 50px;"></div>
+                    
+                    <!-- States -->
+                    <div class="state initial" style="top: 10px; left: 120px;">
+                        <div class="state-name">PENDING</div>
+                        <div class="state-description">Validation in<br/>progress</div>
+                    </div>
+                    
+                    <div class="state active" style="top: 10px; left: 350px;">
+                        <div class="state-name">ACTIVE</div>
+                        <div class="state-description">Book currently<br/>on loan</div>
+                    </div>
+                    
+                    <div class="state error" style="top: 150px; left: 120px;">
+                        <div class="state-name">REJECTED</div>
+                        <div class="state-description">Validation failed<br/>loan denied</div>
+                    </div>
+                    
+                    <div class="state warning" style="top: 150px; left: 350px;">
+                        <div class="state-name">OVERDUE</div>
+                        <div class="state-description">Past due date<br/>late fees apply</div>
+                    </div>
+                    
+                    <div class="state" style="top: 150px; right: 120px;">
+                        <div class="state-name">RENEWED</div>
+                        <div class="state-description">Extended due date<br/>still active</div>
+                    </div>
+                    
+                    <div class="state final" style="bottom: 20px; left: 50%; transform: translateX(-50%);">
+                        <div class="state-name">RETURNED</div>
+                        <div class="state-description">Book returned<br/>loan completed</div>
+                    </div>
+                    
+                    <!-- SVG for transitions -->
+                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                        <!-- Transitions -->
+                        <!-- Start to PENDING -->
+                        <path class="transition-line" d="M 70 30 L 120 30" />
+                        
+                        <!-- PENDING to ACTIVE -->
+                        <path class="transition-line" d="M 250 30 L 350 30" />
+                        
+                        <!-- PENDING to REJECTED -->
+                        <path class="transition-line" d="M 170 60 L 170 150" />
+                        
+                        <!-- ACTIVE to OVERDUE -->
+                        <path class="transition-line" d="M 400 60 L 400 150" />
+                        
+                        <!-- ACTIVE to RENEWED -->
+                        <path class="transition-line" d="M 480 30 L 580 150" />
+                        
+                        <!-- RENEWED to ACTIVE -->
+                        <path class="transition-line" d="M 580 180 L 480 60" />
+                        
+                        <!-- OVERDUE to RETURNED -->
+                        <path class="transition-line" d="M 400 180 L 400 250" />
+                        
+                        <!-- ACTIVE to RETURNED -->
+                        <path class="transition-line" d="M 420 60 L 420 250" />
+                        
+                        <!-- RENEWED to RETURNED -->
+                        <path class="transition-line" d="M 600 180 L 450 250" />
+                    </svg>
+                    
+                    <!-- Transition Labels -->
+                    <div class="transition-label guard" style="top: 15px; left: 280px;">[validation passes]</div>
+                    <div class="transition-label guard" style="top: 100px; left: 80px;">[validation fails]</div>
+                    <div class="transition-label guard" style="top: 100px; left: 320px;">[due date passed]</div>
+                    <div class="transition-label event" style="top: 80px; right: 80px;">renew</div>
+                    <div class="transition-label event" style="top: 130px; right: 150px;">due date updated</div>
+                    <div class="transition-label event" style="top: 210px; left: 320px;">return book</div>
+                    <div class="transition-label event" style="top: 150px; left: 440px;">return book</div>
+                    <div class="transition-label event" style="bottom: 80px; right: 150px;">return book</div>
+                </div>
+            </div>
+            
+            <!-- Member State Machine -->
+            <div class="state-machine">
+                <div class="machine-title">👤 Member State Machine</div>
+                <div class="states-container" style="height: 350px;">
+                    
+                    <!-- Start Marker -->
+                    <div class="start-marker" style="top: 20px; left: 50px;"></div>
+                    
+                    <!-- States -->
+                    <div class="state initial" style="top: 10px; left: 120px;">
+                        <div class="state-name">REGISTERED</div>
+                        <div class="state-description">New member<br/>account created</div>
+                    </div>
+                    
+                    <div class="state active" style="top: 10px; left: 350px;">
+                        <div class="state-name">ACTIVE</div>
+                        <div class="state-description">Full borrowing<br/>privileges</div>
+                    </div>
+                    
+                    <div class="state warning" style="top: 150px; left: 120px;">
+                        <div class="state-name">EXPIRED</div>
+                        <div class="state-description">Membership needs<br/>renewal</div>
+                    </div>
+                    
+                    <div class="state error" style="top: 150px; left: 350px;">
+                        <div class="state-name">SUSPENDED</div>
+                        <div class="state-description">Temporarily blocked<br/>due to violations</div>
+                    </div>
+                    
+                    <div class="state" style="top: 150px; right: 120px;">
+                        <div class="state-name">RESTRICTED</div>
+                        <div class="state-description">Limited privileges<br/>excessive fines</div>
+                    </div>
+                    
+                    <div class="state final" style="bottom: 20px; left: 50%; transform: translateX(-50%);">
+                        <div class="state-name">CANCELLED</div>
+                        <div class="state-description">Account permanently<br/>closed</div>
+                    </div>
+                    
+                    <!-- SVG for transitions -->
+                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                        <!-- Transitions -->
+                        <!-- Start to REGISTERED -->
+                        <path class="transition-line" d="M 70 30 L 120 30" />
+                        
+                        <!-- REGISTERED to ACTIVE -->
+                        <path class="transition-line" d="M 250 30 L 350 30" />
+                        
+                        <!-- ACTIVE to EXPIRED -->
+                        <path class="transition-line" d="M 370 60 L 170 150" />
+                        
+                        <!-- EXPIRED to ACTIVE -->
+                        <path class="transition-line" d="M 170 180 L 370 60" />
+                        
+                        <!-- ACTIVE to SUSPENDED -->
+                        <path class="transition-line" d="M 400 60 L 400 150" />
+                        
+                        <!-- SUSPENDED to ACTIVE -->
+                        <path class="transition-line" d="M 420 150 L 420 60" />
+                        
+                        <!-- ACTIVE to RESTRICTED -->
+                        <path class="transition-line" d="M 480 30 L 580 150" />
+                        
+                        <!-- RESTRICTED to ACTIVE -->
+                        <path class="transition-line" d="M 580 180 L 480 60" />
+                        
+                        <!-- Any state to CANCELLED -->
+                        <path class="transition-line dashed" d="M 170 180 L 350 250" />
+                        <path class="transition-line dashed" d="M 400 180 L 400 250" />
+                        <path class="transition-line dashed" d="M 580 180 L 450 250" />
+                    </svg>
+                    
+                    <!-- Transition Labels -->
+                    <div class="transition-label event" style="top: 15px; left: 280px;">activate account</div>
+                    <div class="transition-label guard" style="top: 100px; left: 200px;">[membership expires]</div>
+                    <div class="transition-label event" style="top: 130px; left: 200px;">renew membership</div>
+                    <div class="transition-label event" style="top: 100px; left: 330px;">policy violation</div>
+                    <div class="transition-label event" style="top: 130px; left: 350px;">reinstate</div>
+                    <div class="transition-label guard" style="top: 80px; right: 80px;">[fines > $10]</div>
+                    <div class="transition-label event" style="top: 130px; right: 150px;">pay fines</div>
+                    <div class="transition-label event" style="bottom: 80px; left: 200px;">close account</div>
+                </div>
+            </div>
+            
+            <!-- Fine State Machine -->
+            <div class="state-machine">
+                <div class="machine-title">💰 Fine State Machine</div>
+                <div class="states-container" style="height: 300px;">
+                    
+                    <!-- Start Marker -->
+                    <div class="start-marker" style="top: 20px; left: 50px;"></div>
+                    
+                    <!-- States -->
+                    <div class="state initial" style="top: 10px; left: 120px;">
+                        <div class="state-name">GENERATED</div>
+                        <div class="state-description">Fine created<br/>automatically</div>
+                    </div>
+                    
+                    <div class="state warning" style="top: 10px; left: 350px;">
+                        <div class="state-name">UNPAID</div>
+                        <div class="state-description">Outstanding<br/>payment required</div>
+                    </div>
+                    
+                    <div class="state" style="top: 10px; right: 120px;">
+                        <div class="state-name">PARTIALLY_PAID</div>
+                        <div class="state-description">Partial payment<br/>balance remaining</div>
+                    </div>
+                    
+                    <div class="state active" style="bottom: 50px; left: 180px;">
+                        <div class="state-name">PAID</div>
+                        <div class="state-description">Fully paid<br/>balance cleared</div>
+                    </div>
+                    
+                    <div class="state final" style="bottom: 50px; right: 180px;">
+                        <div class="state-name">WAIVED</div>
+                        <div class="state-description">Forgiven by<br/>staff decision</div>
+                    </div>
+                    
+                    <!-- SVG for transitions -->
+                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+                        <!-- Transitions -->
+                        <!-- Start to GENERATED -->
+                        <path class="transition-line" d="M 70 30 L 120 30" />
+                        
+                        <!-- GENERATED to UNPAID -->
+                        <path class="transition-line" d="M 250 30 L 350 30" />
+                        
+                        <!-- UNPAID to PARTIALLY_PAID -->
+                        <path class="transition-line" d="M 480 30 L 580 30" />
+                        
+                        <!-- PARTIALLY_PAID to PAID -->
+                        <path class="transition-line" d="M 600 60 L 250 200" />
+                        
+                        <!-- UNPAID to PAID -->
+                        <path class="transition-line" d="M 380 60 L 220 200" />
+                        
+                        <!-- UNPAID to WAIVED -->
+                        <path class="transition-line" d="M 420 60 L 520 200" />
+                        
+                        <!-- PARTIALLY_PAID to WAIVED -->
+                        <path class="transition-line" d="M 620 60 L 560 200" />
+                    </svg>
+                    
+                    <!-- Transition Labels -->
+                    <div class="transition-label event" style="top: 15px; left: 280px;">notify member</div>
+                    <div class="transition-label event" style="top: 15px; right: 200px;">partial payment</div>
+                    <div class="transition-label event" style="top: 120px; left: 150px;">full payment</div>
+                    <div class="transition-label event" style="top: 80px; left: 300px;">full payment</div>
+                    <div class="transition-label event" style="top: 120px; right: 150px;">staff waiver</div>
+                    <div class="transition-label event" style="top: 80px; right: 200px;">staff waiver</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Transition Tables -->
+        <div class="transition-tables">
+            <h3>📊 State Transition Tables</h3>
+            <div class="tables-grid">
+                
+                <!-- Book Copy Transitions -->
+                <div class="transition-table">
+                    <div class="table-header">Book Copy State Transitions</div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="from-state">AVAILABLE</div>
+                            <div class="trigger">checkout</div>
+                            <div class="to-state">CHECKED_OUT</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">AVAILABLE</div>
+                            <div class="trigger">reserve</div>
+                            <div class="to-state">RESERVED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">AVAILABLE</div>
+                            <div class="trigger">damage</div>
+                            <div class="to-state">IN_REPAIR</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">CHECKED_OUT</div>
+                            <div class="trigger">return</div>
+                            <div class="to-state">AVAILABLE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">CHECKED_OUT</div>
+                            <div class="trigger">overdue</div>
+                            <div class="to-state">OVERDUE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">OVERDUE</div>
+                            <div class="trigger">return</div>
+                            <div class="to-state">AVAILABLE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">OVERDUE</div>
+                            <div class="trigger">lost</div>
+                            <div class="to-state">LOST</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">IN_REPAIR</div>
+                            <div class="trigger">repaired</div>
+                            <div class="to-state">AVAILABLE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ANY</div>
+                            <div class="trigger">withdraw</div>
+                            <div class="to-state">WITHDRAWN</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Loan Transitions -->
+                <div class="transition-table">
+                    <div class="table-header">Loan State Transitions</div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="from-state">PENDING</div>
+                            <div class="trigger">approve</div>
+                            <div class="to-state">ACTIVE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">PENDING</div>
+                            <div class="trigger">reject</div>
+                            <div class="to-state">REJECTED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ACTIVE</div>
+                            <div class="trigger">return</div>
+                            <div class="to-state">RETURNED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ACTIVE</div>
+                            <div class="trigger">renew</div>
+                            <div class="to-state">RENEWED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ACTIVE</div>
+                            <div class="trigger">overdue</div>
+                            <div class="to-state">OVERDUE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">RENEWED</div>
+                            <div class="trigger">activate</div>
+                            <div class="to-state">ACTIVE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">RENEWED</div>
+                            <div class="trigger">return</div>
+                            <div class="to-state">RETURNED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">OVERDUE</div>
+                            <div class="trigger">return</div>
+                            <div class="to-state">RETURNED</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Member Transitions -->
+                <div class="transition-table">
+                    <div class="table-header">Member State Transitions</div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="from-state">REGISTERED</div>
+                            <div class="trigger">activate</div>
+                            <div class="to-state">ACTIVE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ACTIVE</div>
+                            <div class="trigger">expire</div>
+                            <div class="to-state">EXPIRED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ACTIVE</div>
+                            <div class="trigger">violate</div>
+                            <div class="to-state">SUSPENDED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ACTIVE</div>
+                            <div class="trigger">exceed</div>
+                            <div class="to-state">RESTRICTED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">EXPIRED</div>
+                            <div class="trigger">renew</div>
+                            <div class="to-state">ACTIVE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">SUSPENDED</div>
+                            <div class="trigger">reinstate</div>
+                            <div class="to-state">ACTIVE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">RESTRICTED</div>
+                            <div class="trigger">pay</div>
+                            <div class="to-state">ACTIVE</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">ANY</div>
+                            <div class="trigger">cancel</div>
+                            <div class="to-state">CANCELLED</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fine Transitions -->
+                <div class="transition-table">
+                    <div class="table-header">Fine State Transitions</div>
+                    <div class="table-content">
+                        <div class="table-row">
+                            <div class="from-state">GENERATED</div>
+                            <div class="trigger">notify</div>
+                            <div class="to-state">UNPAID</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">UNPAID</div>
+                            <div class="trigger">partial</div>
+                            <div class="to-state">PARTIALLY_PAID</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">UNPAID</div>
+                            <div class="trigger">full</div>
+                            <div class="to-state">PAID</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">UNPAID</div>
+                            <div class="trigger">waive</div>
+                            <div class="to-state">WAIVED</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">PARTIALLY_PAID</div>
+                            <div class="trigger">complete</div>
+                            <div class="to-state">PAID</div>
+                        </div>
+                        <div class="table-row">
+                            <div class="from-state">PARTIALLY_PAID</div>
+                            <div class="trigger">waive</div>
+                            <div class="to-state">WAIVED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Guard Conditions -->
+        <div class="guard-conditions">
+            <h3>⚠️ Guard Conditions & Business Rules</h3>
+            <div class="guard-grid">
+                
+                <div class="guard-item">
+                    <div class="guard-title">Book Checkout Validation</div>
+                    <div class="guard-desc">Book can only transition from AVAILABLE to CHECKED_OUT if all validation conditions are met</div>
+                    <div class="guard-example">[book.status == AVAILABLE] AND [member.canBorrow() == true] AND [member.fines <= $10.00]</div>
+                </div>
+                
+                <div class="guard-item">
+                    <div class="guard-title">Overdue Transition</div>
+                    <div class="guard-desc">Automatic state change when current date exceeds due date</div>
+                    <div class="guard-example">[currentDate > loan.dueDate] AND [loan.status == ACTIVE]</div>
+                </div>
+                
+                <div class="guard-item">
+                    <div class="guard-title">Membership Expiry</div>
+                    <div class="guard-desc">Member automatically becomes expired when membership period ends</div>
+                    <div class="guard-example">[currentDate > member.membershipEndDate]</div>
+                </div>
+                
+                <div class="guard-item">
+                    <div class="guard-title">Fine Threshold Restriction</div>
+                    <div class="guard-desc">Member becomes restricted when outstanding fines exceed threshold</div>
+                    <div class="guard-example">[member.totalOutstandingFines > systemConfig.fineThreshold]</div>
+                </div>
+                
+                <div class="guard-item">
+                    <div class="guard-title">Loan Renewal Eligibility</div>
+                    <div class="guard-desc">Loan can only be renewed under specific conditions</div>
+                    <div class="guard-example">[loan.renewalCount < loan.maxRenewals] AND [loan.status == ACTIVE] AND [!loan.isOverdue()]</div>
+                </div>
+                
+                <div class="guard-item">
+                    <div class="guard-title">Book Loss Declaration</div>
+                    <div class="guard-desc">Book is considered lost after extended overdue period</div>
+                    <div class="guard-example">[loan.daysOverdue >= 30] AND [loan.status == OVERDUE]</div>
+                </div>
+                
+                <div class="guard-item">
+                    <div class="guard-title">Administrative Override</div>
+                    <div class="guard-desc">Staff can override certain state transitions with proper authorization</div>
+                    <div class="guard-example">[user.role == ADMIN] OR [user.role == MANAGER] AND [override.reason != null]</div>
+                </div>
+                
+                <div class="guard-item">
+                    <div class="guard-title">Fine Payment Validation</div>
+                    <div class="guard-desc">Payment amount must be valid for state transition</div>
+                    <div class="guard-example">[payment.amount > 0] AND [payment.amount <= fine.outstandingBalance]</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- State Diagram Legend -->
+        <div class="legend">
+            <h3>🎯 State Diagram Legend</h3>
+            <div class="legend-grid">
+                <div class="legend-category">
+                    <h4>State Types</h4>
+                    <div class="legend-item">
+                        <div class="state-sample initial"></div>
+                        <span>Initial State - Entry point of state machine</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="state-sample active"></div>
+                        <span>Active State - Normal operational state</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="state-sample warning"></div>
+                        <span>Warning State - Requires attention or action</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="state-sample error"></div>
+                        <span>Error State - Problem condition exists</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="state-sample final"></div>
+                        <span>Final State - Terminal state, no further transitions</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="state-sample normal"></div>
+                        <span>Normal State - Standard intermediate state</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Transition Types</h4>
+                    <div class="legend-item">
+                        <div style="width: 30px; height: 2px; background: #495057; position: relative;">
+                            <div style="position: absolute; right: -5px; top: -3px; width: 0; height: 0; border-left: 8px solid #495057; border-top: 3px solid transparent; border-bottom: 3px solid transparent;"></div>
+                        </div>
+                        <span>Normal Transition - Standard state change</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 30px; height: 2px; border-top: 2px dashed #6c757d; position: relative;">
+                            <div style="position: absolute; right: -5px; top: -4px; width: 0; height: 0; border-left: 8px solid #6c757d; border-top: 3px solid transparent; border-bottom: 3px solid transparent;"></div>
+                        </div>
+                        <span>Administrative Transition - Staff override</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 20px; background: #2c3e50; border-radius: 50%;"></div>
+                        <span>Start Marker - Initial state entry point</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 20px; border: 3px solid #2c3e50; border-radius: 50%; background: white; position: relative;">
+                            <div style="position: absolute; top: 3px; left: 3px; width: 8px; height: 8px; background: #2c3e50; border-radius: 50%;"></div>
+                        </div>
+                        <span>End Marker - Final state indicator</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>Transition Labels</h4>
+                    <div class="legend-item">
+                        <div style="background: #d1ecf1; border: 1px solid #bee5eb; border-radius: 3px; padding: 2px 6px; font-size: 0.8em; color: #0c5460;">event</div>
+                        <span>Event Trigger - User or system action</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 3px; padding: 2px 6px; font-size: 0.8em; color: #856404;">guard</div>
+                        <span>Guard Condition - Boolean condition</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="background: white; border: 1px solid #dee2e6; border-radius: 3px; padding: 2px 6px; font-size: 0.8em; color: #495057;">action</div>
+                        <span>Action - Side effect during transition</span>
+                    </div>
+                </div>
+                
+                <div class="legend-category">
+                    <h4>State Machine Concepts</h4>
+                    <div class="legend-item">
+                        <div style="width: 30px; height: 20px; border: 2px dashed #9b59b6; border-radius: 4px; background: rgba(155, 89, 182, 0.1);"></div>
+                        <span>Composite State - Contains sub-states</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 20px; background: #f39c12; border-radius: 3px;"></div>
+                        <span>State Invariant - Condition true while in state</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 20px; height: 20px; background: #e74c3c; border-radius: 3px;"></div>
+                        <span>Entry/Exit Action - Executed on state change</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Implementation Notes -->
+        <div class="transition-tables">
+            <h3>🛠️ Implementation Considerations</h3>
+            <div class="tech-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px;">
+                
+                <div class="tech-category" style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #667eea;">
+                    <h4 style="color: #2c3e50; margin: 0 0 15px 0;">State Management Patterns</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>State Machine Pattern:</strong> Explicit state modeling with defined transitions</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Event-Driven Updates:</strong> State changes triggered by domain events</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Guard Validation:</strong> Business rules enforced at transition points</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Atomic Transitions:</strong> State changes within database transactions</li>
+                        <li style="padding: 8px 0; font-size: 0.9em; color: #495057;"><strong>Audit Trail:</strong> All state changes logged for compliance</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category" style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #e74c3c;">
+                    <h4 style="color: #2c3e50; margin: 0 0 15px 0;">Automated State Transitions</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Scheduled Jobs:</strong> Daily batch processing for overdue items</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Event Triggers:</strong> Real-time transitions on loan returns</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Time-Based Rules:</strong> Membership expiry automation</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Threshold Monitoring:</strong> Fine limit enforcement</li>
+                        <li style="padding: 8px 0; font-size: 0.9em; color: #495057;"><strong>Notification Integration:</strong> Alerts on critical state changes</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category" style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #f39c12;">
+                    <h4 style="color: #2c3e50; margin: 0 0 15px 0;">Error Handling & Recovery</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Invalid Transitions:</strong> Graceful handling of illegal state changes</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Rollback Mechanisms:</strong> Revert failed state transitions</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Compensation Actions:</strong> Undo operations for consistency</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>State Validation:</strong> Integrity checks on state changes</li>
+                        <li style="padding: 8px 0; font-size: 0.9em; color: #495057;"><strong>Recovery Procedures:</strong> Manual intervention protocols</li>
+                    </ul>
+                </div>
+                
+                <div class="tech-category" style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #27ae60;">
+                    <h4 style="color: #2c3e50; margin: 0 0 15px 0;">Performance Optimization</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>State Caching:</strong> Cache frequently accessed state information</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Batch Processing:</strong> Group state updates for efficiency</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Lazy Evaluation:</strong> Compute state only when needed</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #e9ecef; font-size: 0.9em; color: #495057;"><strong>Index Optimization:</strong> Database indexes on state columns</li>
+                        <li style="padding: 8px 0; font-size: 0.9em; color: #495057;"><strong>Event Sourcing:</strong> Replay events to reconstruct state</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
